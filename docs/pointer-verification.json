@@ -1,0 +1,75 @@
+{
+  "checks": [
+    "mouse capture acquired",
+    "mouse capture released",
+    "clockwise mouse drag outside circle commits PROJECTS: {\"angle\":18,\"index\":3,\"phase\":\"idle\",\"confirmation\":\"Select a section, then confirm to enter.\"}",
+    "mouse capture acquired",
+    "mouse capture released",
+    "counterclockwise mouse drag returns HOME",
+    "synthetic pointercancel rolls back without confirmation",
+    "interior/spokes cannot initiate dragging",
+    "browser touch gesture commits CONTACT",
+    "protocol touch cancellation restores committed CONTACT",
+    "mouse capture acquired",
+    "mouse capture released",
+    "settled angle -36 centers track within one CSS pixel",
+    "mouse capture acquired",
+    "mouse capture released",
+    "settled angle -18 centers track within one CSS pixel",
+    "mouse capture acquired",
+    "mouse capture released",
+    "settled angle 0 centers track within one CSS pixel",
+    "mouse capture acquired",
+    "mouse capture released",
+    "settled angle 18 centers track within one CSS pixel",
+    "mouse capture acquired",
+    "mouse capture released",
+    "settled angle 36 centers track within one CSS pixel",
+    "dragging, release and snap completion never confirm",
+    "inactive HOME label selects without confirming",
+    "active label confirms exactly once",
+    "Enter during settling confirms committed PROJECTS once and finishes snap",
+    "slider ignores repeated Enter",
+    "native center-button Enter produces one confirmation: {\"angle\":18,\"index\":3,\"phase\":\"idle\",\"confirmation\":\"PROJECTS confirmed · 3\"}",
+    "native center button suppresses repeated Enter",
+    "Home selects ABOUT and left endpoint clamps",
+    "End selects STACK and right endpoint clamps",
+    "active gesture rejects Enter confirmation",
+    "rim press and its subsequent browser click do not confirm",
+    "explicit Enter control confirms once",
+    "reduced-motion selection finishes immediately",
+    "320px page has no horizontal overflow",
+    "resize preserves committed selection",
+    "confirmation leaves URL unchanged"
+  ],
+  "settled": [
+    {
+      "angle": -36,
+      "trackCenterError": 0
+    },
+    {
+      "angle": -18,
+      "trackCenterError": 0
+    },
+    {
+      "angle": 0,
+      "trackCenterError": 0
+    },
+    {
+      "angle": 18,
+      "trackCenterError": 0
+    },
+    {
+      "angle": 36,
+      "trackCenterError": 0
+    }
+  ],
+  "errors": [],
+  "finalState": {
+    "angle": 18,
+    "index": 3,
+    "phase": "idle",
+    "confirmation": "STACK confirmed · 4"
+  },
+  "touch": "Chrome DevTools touch input; no physical-device test"
+}

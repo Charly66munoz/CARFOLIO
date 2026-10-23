@@ -1,0 +1,639 @@
+{
+  "browser": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+  "layouts": [
+    {
+      "name": "desktop",
+      "viewport": [
+        1440,
+        900
+      ],
+      "clientWidth": 1440,
+      "document": [
+        1440,
+        900
+      ],
+      "stage": {
+        "x": 457,
+        "y": 328,
+        "width": 526,
+        "height": 526
+      },
+      "activeCenterX": 720,
+      "labels": [
+        "ABOUT",
+        "CONTACT",
+        "HOME",
+        "PROJECTS",
+        "STACK"
+      ],
+      "counter": "03 / 05",
+      "images": [
+        {
+          "source": "embedded local SVG",
+          "width": 7,
+          "height": 7,
+          "natural": [
+            7,
+            7
+          ],
+          "loaded": true
+        },
+        {
+          "source": "embedded local SVG",
+          "width": 1136,
+          "height": 1136,
+          "natural": [
+            1136,
+            1136
+          ],
+          "loaded": true
+        },
+        {
+          "source": "embedded local SVG",
+          "width": 630,
+          "height": 630,
+          "natural": [
+            630,
+            630
+          ],
+          "loaded": true
+        },
+        {
+          "source": "embedded local SVG",
+          "width": 570,
+          "height": 570,
+          "natural": [
+            570,
+            570
+          ],
+          "loaded": true
+        },
+        {
+          "source": "/src/assets/steering-wheel-transparent-candidate.png",
+          "width": 458,
+          "height": 458,
+          "natural": [
+            1254,
+            1254
+          ],
+          "loaded": true
+        }
+      ]
+    },
+    {
+      "name": "mobile",
+      "viewport": [
+        320,
+        740
+      ],
+      "clientWidth": 305,
+      "document": [
+        305,
+        951
+      ],
+      "stage": {
+        "x": 16,
+        "y": 341,
+        "width": 273,
+        "height": 273
+      },
+      "activeCenterX": 152.5,
+      "labels": [
+        "ABOUT",
+        "CONTACT",
+        "HOME",
+        "PROJECTS",
+        "STACK"
+      ],
+      "counter": "03 / 05",
+      "images": [
+        {
+          "source": "embedded local SVG",
+          "width": 7,
+          "height": 7,
+          "natural": [
+            7,
+            7
+          ],
+          "loaded": true
+        },
+        {
+          "source": "embedded local SVG",
+          "width": 1136,
+          "height": 1136,
+          "natural": [
+            1136,
+            1136
+          ],
+          "loaded": true
+        },
+        {
+          "source": "embedded local SVG",
+          "width": 630,
+          "height": 630,
+          "natural": [
+            630,
+            630
+          ],
+          "loaded": true
+        },
+        {
+          "source": "embedded local SVG",
+          "width": 296,
+          "height": 296,
+          "natural": [
+            570,
+            570
+          ],
+          "loaded": true
+        },
+        {
+          "source": "/src/assets/steering-wheel-transparent-candidate.png",
+          "width": 238,
+          "height": 238,
+          "natural": [
+            1254,
+            1254
+          ],
+          "loaded": true
+        }
+      ]
+    },
+    {
+      "name": "short",
+      "viewport": [
+        1440,
+        600
+      ],
+      "clientWidth": 1425,
+      "document": [
+        1425,
+        900
+      ],
+      "stage": {
+        "x": 449.5,
+        "y": 328,
+        "width": 526,
+        "height": 526
+      },
+      "activeCenterX": 712.5,
+      "labels": [
+        "ABOUT",
+        "CONTACT",
+        "HOME",
+        "PROJECTS",
+        "STACK"
+      ],
+      "counter": "03 / 05",
+      "images": [
+        {
+          "source": "embedded local SVG",
+          "width": 7,
+          "height": 7,
+          "natural": [
+            7,
+            7
+          ],
+          "loaded": true
+        },
+        {
+          "source": "embedded local SVG",
+          "width": 1136,
+          "height": 1136,
+          "natural": [
+            1136,
+            1136
+          ],
+          "loaded": true
+        },
+        {
+          "source": "embedded local SVG",
+          "width": 630,
+          "height": 630,
+          "natural": [
+            630,
+            630
+          ],
+          "loaded": true
+        },
+        {
+          "source": "embedded local SVG",
+          "width": 570,
+          "height": 570,
+          "natural": [
+            570,
+            570
+          ],
+          "loaded": true
+        },
+        {
+          "source": "/src/assets/steering-wheel-transparent-candidate.png",
+          "width": 458,
+          "height": 458,
+          "natural": [
+            1254,
+            1254
+          ],
+          "loaded": true
+        }
+      ]
+    }
+  ],
+  "asset": {
+    "size": [
+      1254,
+      1254
+    ],
+    "totalPixels": 1572516,
+    "minAlpha": 0,
+    "maxAlpha": 255,
+    "pixelsWithTransparency": 1570849,
+    "samples": [
+      {
+        "x": 0,
+        "y": 0,
+        "rgba": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "x": 526,
+        "y": 320,
+        "rgba": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "x": 526,
+        "y": 526,
+        "rgba": [
+          99,
+          103,
+          107,
+          253
+        ]
+      }
+    ]
+  },
+  "calibration": {
+    "hub": {
+      "x": 625.9569149234708,
+      "y": 645.9879720370975
+    },
+    "positions": [
+      {
+        "angle": -36,
+        "x": 712.5354933720736,
+        "y": 591.0490941106916
+      },
+      {
+        "angle": -18,
+        "x": 712.5185853031714,
+        "y": 591.0576593627804
+      },
+      {
+        "angle": 0,
+        "x": 712.4998579595012,
+        "y": 591.0605804592697
+      },
+      {
+        "angle": 18,
+        "x": 712.4811445196071,
+        "y": 591.0575715769228
+      },
+      {
+        "angle": 36,
+        "x": 712.46427680157,
+        "y": 591.0489271321424
+      }
+    ],
+    "maxHubDisplacement": 0.0712167662571482,
+    "samples": [
+      {
+        "x": 0,
+        "y": 0,
+        "rgba": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "x": 627,
+        "y": 381,
+        "rgba": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "x": 627,
+        "y": 627,
+        "rgba": [
+          224,
+          177,
+          122,
+          253
+        ]
+      }
+    ],
+    "circleRadius": 223.54999999999998,
+    "effectiveBoundaryWidth": 7
+  },
+  "calibrationRuns": [
+    {
+      "width": 1440,
+      "height": 900,
+      "dpr": 1,
+      "hub": {
+        "x": 625.9569149234708,
+        "y": 645.9879720370975
+      },
+      "positions": [
+        {
+          "angle": -36,
+          "x": 720.0354933720736,
+          "y": 591.0490941106916
+        },
+        {
+          "angle": -18,
+          "x": 720.0185853031714,
+          "y": 591.0576593627804
+        },
+        {
+          "angle": 0,
+          "x": 719.9998579595012,
+          "y": 591.0605804592697
+        },
+        {
+          "angle": 18,
+          "x": 719.9811445196071,
+          "y": 591.0575715769228
+        },
+        {
+          "angle": 36,
+          "x": 719.96427680157,
+          "y": 591.0489271321424
+        }
+      ],
+      "maxHubDisplacement": 0.0712167662571482,
+      "samples": [
+        {
+          "x": 0,
+          "y": 0,
+          "rgba": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "x": 627,
+          "y": 381,
+          "rgba": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "x": 627,
+          "y": 627,
+          "rgba": [
+            224,
+            177,
+            122,
+            253
+          ]
+        }
+      ],
+      "circleRadius": 223.54999999999998,
+      "effectiveBoundaryWidth": 7
+    },
+    {
+      "width": 320,
+      "height": 740,
+      "dpr": 1,
+      "hub": {
+        "x": 625.9569149234708,
+        "y": 645.9879720370975
+      },
+      "positions": [
+        {
+          "angle": -36,
+          "x": 152.5187037319975,
+          "y": 477.52498469515984
+        },
+        {
+          "angle": -18,
+          "x": 152.5100676187574,
+          "y": 477.52954164543553
+        },
+        {
+          "angle": 0,
+          "x": 152.5004460082331,
+          "y": 477.53120682520785
+        },
+        {
+          "angle": 18,
+          "x": 152.4907807397469,
+          "y": 477.52981729368787
+        },
+        {
+          "angle": 36,
+          "x": 152.48201792448793,
+          "y": 477.52550900905845
+        }
+      ],
+      "maxHubDisplacement": 0.036689554067793506,
+      "samples": [
+        {
+          "x": 0,
+          "y": 0,
+          "rgba": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "x": 627,
+          "y": 381,
+          "rgba": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "x": 627,
+          "y": 627,
+          "rgba": [
+            224,
+            177,
+            122,
+            253
+          ]
+        }
+      ],
+      "circleRadius": 116.02499999999999,
+      "effectiveBoundaryWidth": 7
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "dpr": 2,
+      "hub": {
+        "x": 625.9569149234708,
+        "y": 645.9879720370975
+      },
+      "positions": [
+        {
+          "angle": -36,
+          "x": 720.0354933720736,
+          "y": 591.0490941106916
+        },
+        {
+          "angle": -18,
+          "x": 720.0185853031714,
+          "y": 591.0576593627804
+        },
+        {
+          "angle": 0,
+          "x": 719.9998579595012,
+          "y": 591.0605804592697
+        },
+        {
+          "angle": 18,
+          "x": 719.9811445196071,
+          "y": 591.0575715769228
+        },
+        {
+          "angle": 36,
+          "x": 719.96427680157,
+          "y": 591.0489271321424
+        }
+      ],
+      "maxHubDisplacement": 0.0712167662571482,
+      "samples": [
+        {
+          "x": 0,
+          "y": 0,
+          "rgba": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "x": 627,
+          "y": 381,
+          "rgba": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "x": 627,
+          "y": 627,
+          "rgba": [
+            224,
+            177,
+            122,
+            253
+          ]
+        }
+      ],
+      "circleRadius": 223.54999999999998,
+      "effectiveBoundaryWidth": 7
+    },
+    {
+      "width": 320,
+      "height": 740,
+      "dpr": 2,
+      "hub": {
+        "x": 625.9569149234708,
+        "y": 645.9879720370975
+      },
+      "positions": [
+        {
+          "angle": -36,
+          "x": 152.5187037319975,
+          "y": 477.52498469515984
+        },
+        {
+          "angle": -18,
+          "x": 152.5100676187574,
+          "y": 477.52954164543553
+        },
+        {
+          "angle": 0,
+          "x": 152.5004460082331,
+          "y": 477.53120682520785
+        },
+        {
+          "angle": 18,
+          "x": 152.4907807397469,
+          "y": 477.52981729368787
+        },
+        {
+          "angle": 36,
+          "x": 152.48201792448793,
+          "y": 477.52550900905845
+        }
+      ],
+      "maxHubDisplacement": 0.036689554067793506,
+      "samples": [
+        {
+          "x": 0,
+          "y": 0,
+          "rgba": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "x": 627,
+          "y": 381,
+          "rgba": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "x": 627,
+          "y": 627,
+          "rgba": [
+            224,
+            177,
+            122,
+            253
+          ]
+        }
+      ],
+      "circleRadius": 116.02499999999999,
+      "effectiveBoundaryWidth": 7
+    }
+  ],
+  "errors": []
+}

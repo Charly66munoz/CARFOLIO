@@ -1,0 +1,41 @@
+import graphite from '../../assets/atmosphere-graphite.svg'
+import silver from '../../assets/atmosphere-silver.svg'
+import { HorizontalSectionTrack } from './HorizontalSectionTrack'
+import { SteeringWheel } from './SteeringWheel'
+import { useWheelNavigation } from './useWheelNavigation'
+import { SECTIONS } from './sections'
+import type { SectionId } from './sections'
+
+interface SteeringWheelNavigatorProps { onConfirm: (section: SectionId) => void }
+
+export function SteeringWheelNavigator({ onConfirm }: SteeringWheelNavigatorProps) {
+  const navigation = useWheelNavigation(onConfirm)
+  const displayIndex = navigation.state.phase === 'armed' || navigation.state.phase === 'dragging' ? navigation.previewIndex : navigation.state.selectedIndex
+  const selected = SECTIONS[navigation.state.selectedIndex]
+  return (
+    <section className="navigator" aria-label="Steering-wheel navigation" aria-describedby="keyboard-help"
+      data-angle={navigation.state.angleDeg} data-phase={navigation.state.phase} data-selected-index={navigation.state.selectedIndex}>
+      <div className="atmosphere" aria-hidden="true">
+        <div className="atmosphere-graphite"><img src={graphite} alt="" width="1136" height="1136" /></div>
+        <div className="atmosphere-silver"><img src={silver} alt="" width="630" height="630" /></div>
+      </div>
+      <HorizontalSectionTrack angleDeg={navigation.state.angleDeg} selectedIndex={navigation.state.selectedIndex} displayIndex={displayIndex}
+        activateLabel={navigation.activateLabel} onKeyDown={navigation.onKeyDown} />
+      <SteeringWheel {...navigation} />
+      <div className="interaction-hints">
+        <div><p>01 — DRAG TO SELECT</p><span>Rotate the wheel to browse</span></div>
+        <div><p>02 — CLICK TO ENTER</p><span>Confirm your destination</span></div>
+      </div>
+      <div className="navigator-controls">
+        <button type="button" aria-label="Previous section" disabled={!navigation.canConfirm || navigation.state.selectedIndex === 0}
+          onClick={() => navigation.step(-1)} onKeyDown={event => navigation.onKeyDown(event)}>←</button>
+        <button type="button" disabled={!navigation.canConfirm} onClick={navigation.confirm}
+          onKeyDown={event => navigation.onKeyDown(event)}>ENTER {selected.label}</button>
+        <button type="button" aria-label="Next section" disabled={!navigation.canConfirm || navigation.state.selectedIndex === SECTIONS.length - 1}
+          onClick={() => navigation.step(1)} onKeyDown={event => navigation.onKeyDown(event)}>→</button>
+      </div>
+      <p id="keyboard-help" className="sr-only">Drag the wheel outside its center or use arrow keys to select. Enter confirms. Home key selects ABOUT; the HOME section is the middle option. End key selects STACK.</p>
+      <p className="sr-only" aria-live="polite">{selected.label} selected. Confirm to enter.</p>
+    </section>
+  )
+}
