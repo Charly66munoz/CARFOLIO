@@ -5,8 +5,8 @@
 This document records the finalized implementation plan discussed with the user, including the asset-validation gate in T2 and early real-browser interaction check in T4.
 
 - Architecture: approved in principle, with the requested refinements incorporated below.
-- Authorization: on 2026-10-23 the user explicitly authorized completing T2 with the supplied transparent candidate and proceeding sequentially through T4, T5 and T6, including targeted positioning corrections and temporary minor visual differences. No approval is required between these authorized tasks. T7/T8, full pages, routing, cinematic transitions and publishing remain outside this delivery.
-- Current progress: T1–T6 are complete for the local prototype. T2 passes with the authorized candidate and independent circular boundary. See `docs/T2_ASSET_VALIDATION.md` and `docs/T2_T6_IMPLEMENTATION.md` for measurements, checks and remaining verification. T7/T8 have not been undertaken as comprehensive phases.
+- Authorization: on 2026-10-23 the user explicitly authorized completing T2 with the supplied transparent candidate and proceeding sequentially through T4, T5 and T6, including targeted positioning corrections and temporary minor visual differences. No approval is required between these authorized tasks. The user subsequently authorized T7 and T8 in this session. Full pages, routing, cinematic transitions and publishing remain outside this delivery.
+- Current progress: T1–T6 are complete for the local prototype. T2 passes with the authorized candidate and calibrated contour band. See `docs/T2_ASSET_VALIDATION.md` and `docs/T2_T6_IMPLEMENTATION.md` for measurements, checks and remaining verification. T7 accessibility/mobile improvements and T8 browser automation are covered by docs/T7_T8_VALIDATION.md; that report separates verified results from pending manual checks.
 - Read the current `AGENTS.md`, `PROJECT_CONTEXT.md`, and this file completely at the beginning of each new project session before making project-specific recommendations or changes.
 - `AGENTS.md` governs operational restrictions. `PROJECT_CONTEXT.md` governs approved product, visual, and interaction requirements. This plan governs architecture, tasks, and acceptance criteria where consistent with those documents.
 - Report inconsistencies rather than silently resolving them. Update progress only from actual implementation and verification evidence.
@@ -160,9 +160,9 @@ Update the previous polar angle even at a limit. Do not accumulate invisible ove
 
 ### Interaction region
 
-The latest user revision supersedes the narrow perimeter ring. Use one invisible circle of radius `0.37 ? stage width`, inscribed within the visible outer silhouette. The excluded central hub radius is `max(44px, 0.22 ? stage width) / 2`, matching the confirmation target. The rest of the circle, including rim, spokes, controls and openings, initiates dragging. The radius is independent of image alpha and rotation at runtime.
+The latest approved revision supersedes the broad circle and earlier perimeter rings. A fixed outer-contour polygon is calibrated from the transparent asset (alpha 128, ignoring openings). Transform pointer coordinates into source-image space using the calibrated hub, scale and displayed rotation. Initiation requires an inside point whose shortest distance to the outer polygon is between 1 and 45 CSS pixels, inclusive. Both insets are configurable and remain fixed in CSS pixels across screen sizes.
 
-Use existing radial math and pointer capture. Freeze and rebase ongoing gestures only inside the excluded hub. No perimeter stroke or focus circumference is displayed. A compact keyboard-only focus badge preserves visible focus. Decorative instructions must not intercept the drag area. See `docs/INTERIOR_DRAG.md`; previous ring measurements are historical evidence.
+Use the same eligibility helper for pointer-down and hover. Pointer capture continues beyond the band. Keep the hub radius `max(44px, 0.22 * stage width) / 2` separate from initiation eligibility: ongoing gestures freeze/rebase only inside that hub. No artwork or keyboard-command changes; no visible border. The compact keyboard focus badge remains. See `docs/VISIBLE_EDGE_BAND.md`; earlier geometry records are historical.
 
 ### Pointer lifecycle
 
@@ -434,13 +434,15 @@ T8 adds browser coverage, deterministic settled screenshots, responsive checks, 
 | T1 | Complete | Type check, lint, production build and Chrome foundation mount passed; project-local cache/temp configuration recorded in `docs/T2_ASSET_VALIDATION.md` |
 | T2 | Complete — prototype gate passed | Candidate preserved; transparency, appearance, resolution, hub stability and independent 7px circle checked. `docs/static-verification.json` and `docs/T2_ASSET_VALIDATION.md` contain evidence. |
 | T3 | Complete | Original 86 mathematical tests continue to pass; section-angle configuration remains unchanged. |
-| T4 | Complete | Integration tests and real Chrome mouse capture/outside release/direction/cancellation checks passed. Protocol touch checked; physical-device verification remains pending. |
-| T5 | Complete | Single 240ms GSAP snap, interruption/stale-callback tests, reduced-motion behavior and all five Chrome settled positions passed; track-center error 0 CSS pixels in the final run. |
-| T6 | Complete | Keyboard, native buttons, explicit confirmation during settling, repetition and active-gesture rejection tested. No automatic navigation; URL unchanged. See `docs/T2_T6_IMPLEMENTATION.md`. |
-| T7 | Not started | None |
-| T8 | Not started | Comprehensive browser and device checks pending |
+| T4 | Finished | Integration tests and real Chrome mouse capture/outside release/direction/cancellation checks passed. Protocol touch checked; physical-device verification remains pending. |
+| T5 | Finished | Single 240ms GSAP snap, interruption/stale-callback tests, reduced-motion behavior and all five Chrome settled positions passed; track-center error 0 CSS pixels in the final run. |
+| T6 | Finished | Keyboard, native buttons, explicit confirmation during settling, repetition and active-gesture rejection tested. No automatic navigation; URL unchanged. See `docs/T2_T6_IMPLEMENTATION.md`. |
+| T7 | Complete — defined baseline | Keyboard semantics, endpoint focus retention, reduced motion, target sizes, 320px scrolling and control separation passed; see docs/T7_T8_VALIDATION.md. |
+| T8 | Complete — automation and handoff | 43 browser tests passed, 2 capability-specific skips; 15 settled screenshots captured. Physical-device/screen-reader checks remain explicitly pending in docs/T7_T8_VALIDATION.md. |
 
-T1–T6 are complete under the user's explicit authorization. The original and candidate assets remain intact, all work is local, and final visual refinement is deferred. T7/T8 comprehensive accessibility, physical-device and cross-browser validation remain future work. No routes, destination pages or cinematic transitions were added.
+T4, T5 and T6 remain Finished. The user approved a 1-45 CSS-pixel drag band. Its three outdated test cases were corrected before T7/T8; the unchanged band is included in the current validation. Prior reports remain historical evidence. T7/T8 address endpoint focus and desktop control overlap without changing the steering mechanics.
+
+T1–T6 are complete under the user's explicit authorization. The original and candidate assets remain intact, all work is local, and final visual refinement is deferred. T7/T8 automated validation and remaining manual physical-device/screen-reader checks are recorded in docs/T7_T8_VALIDATION.md. No routes, destination pages or cinematic transitions were added.
 
 ## Targeted pointer corrections ? 2026-10-23
 

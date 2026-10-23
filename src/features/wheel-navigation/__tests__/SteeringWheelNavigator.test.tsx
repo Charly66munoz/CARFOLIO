@@ -3,6 +3,8 @@ import { StrictMode } from 'react'
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { SteeringWheelNavigator } from '../SteeringWheelNavigator'
+import { WHEEL_OUTER_CONTOUR } from '../wheelContour'
+import { WHEEL_PRESENTATION } from '../presentation'
 
 let rect: DOMRect
 let captures: WeakMap<Element, Set<number>>
@@ -107,11 +109,15 @@ function setup() {
   const navigator = rendered.container.querySelector('.navigator')!
   return { ...rendered, surface, navigator, onConfirm }
 }
-function point(polar: number, radius = 526 * 0.35) {
+function point(polar: number, radius = 216.5) {
   return { clientX: 363 + radius * Math.cos(polar * Math.PI / 180), clientY: 363 + radius * Math.sin(polar * Math.PI / 180) }
 }
 function pointer(surface: Element, type: 'down' | 'move' | 'up' | 'cancel', polar: number, extras: PointerEventInit = {}) {
-  const event = { pointerId: 1, pointerType: 'mouse', isPrimary: true, button: 0, ...point(polar), ...extras }
+  const wheelAngle = Number(surface.closest('.navigator')?.getAttribute('data-angle') ?? 0)
+  const sourceAngle = ((polar - wheelAngle) % 360 + 360) % 360
+  const [x, y] = WHEEL_OUTER_CONTOUR[Math.round(sourceAngle) % 360]
+  const radius = Math.hypot(x - WHEEL_PRESENTATION.hubX, y - WHEEL_PRESENTATION.hubY) * 526 * 0.87 / 1254 - 6
+  const event = { pointerId: 1, pointerType: 'mouse', isPrimary: true, button: 0, ...point(polar, type === 'down' ? radius : undefined), ...extras }
   if (type === 'down') fireEvent.pointerDown(surface, event)
   if (type === 'move') fireEvent.pointerMove(surface, event)
   if (type === 'up') fireEvent.pointerUp(surface, event)
@@ -230,6 +236,51 @@ describe('explicit confirmation and keyboard controls', () => {
     pointer(surface, 'down', -90); pointer(surface, 'up', -90); fireEvent.click(surface)
     expect(onConfirm).not.toHaveBeenCalled()
     expect(surface.parentElement).toBe(screen.getByRole('button', { name: 'Confirm HOME' }).parentElement)
+  })
+})
+
+describe('accessibility and non-drag alternatives', () => {
+  it.each([
+    { name: 'Previous section', key: 'Home', angle: '-36', reverse: 'ArrowRight', next: '-18' },
+    { name: 'Next section', key: 'End', angle: '36', reverse: 'ArrowLeft', next: '18' },
+  ])('retains focus at the $name endpoint and allows keyboard reversal', ({ name, key, angle, reverse, next }) => {
+    const { navigator, onConfirm } = setup()
+    const button = screen.getByRole('button', { name })
+    button.focus()
+    fireEvent.keyDown(button, { key })
+    flush()
+    expect(button.getAttribute('aria-disabled')).toBe('true')
+    expect(button.hasAttribute('disabled')).toBe(false)
+    expect(document.activeElement).toBe(button)
+    fireEvent.click(button)
+    flush()
+    expect(navigator.getAttribute('data-angle')).toBe(angle)
+    expect(onConfirm).not.toHaveBeenCalled()
+    fireEvent.keyDown(button, { key: reverse })
+    flush()
+    expect(navigator.getAttribute('data-angle')).toBe(next)
+    expect(button.getAttribute('aria-disabled')).toBe('false')
+    expect(document.activeElement).toBe(button)
+  })
+
+  it('exposes the committed slider value and configured help without announcing drag previews', () => {
+    const { surface, navigator } = setup()
+    const help = document.getElementById(surface.getAttribute('aria-describedby')!)!
+    expect(help.textContent).toContain(`Drag ${WHEEL_PRESENTATION.dragBandMinInsetPx} to ${WHEEL_PRESENTATION.dragBandMaxInsetPx} pixels`)
+    expect(screen.getByRole('navigation', { name: 'Portfolio sections' })).toBeTruthy()
+    expect(surface.getAttribute('aria-valuemin')).toBe('0')
+    expect(surface.getAttribute('aria-valuemax')).toBe('4')
+    expect(surface.getAttribute('aria-valuetext')).toContain('HOME, 0 degrees')
+    const announcement = navigator.querySelector('[aria-live="polite"]')!
+    pointer(surface, 'down', -90)
+    pointer(surface, 'move', -70)
+    flush(16)
+    expect(announcement.textContent).toBe('HOME selected. Confirm to enter.')
+    expect(surface.getAttribute('aria-valuenow')).toBe('2')
+    pointer(surface, 'up', -70)
+    flush()
+    expect(announcement.textContent).toBe('PROJECTS selected. Confirm to enter.')
+    expect(surface.getAttribute('aria-valuenow')).toBe('3')
   })
 })
 

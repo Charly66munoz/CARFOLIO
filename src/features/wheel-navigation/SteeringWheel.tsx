@@ -27,7 +27,7 @@ export function SteeringWheel({ state, surfaceRef, pointerEvents, canConfirm, co
       </div>
       <div className="wheel-surface" ref={surfaceRef} {...pointerEvents}
         tabIndex={0} role="slider" aria-label="Select portfolio section"
-        aria-valuemin={0} aria-valuemax={4} aria-valuenow={state.selectedIndex}
+        aria-valuemin={0} aria-valuemax={SECTIONS.length - 1} aria-valuenow={state.selectedIndex}
         aria-valuetext={`${selected.label}, ${selected.angleDeg} degrees. Use arrow keys to select and Enter to confirm.`}
         aria-orientation="horizontal" aria-describedby="keyboard-help" onKeyDown={event => onKeyDown(event, true)} />
       <button type="button" className="wheel-center" aria-label={`Confirm ${selected.label}`}

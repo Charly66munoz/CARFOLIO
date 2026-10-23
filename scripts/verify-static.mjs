@@ -71,7 +71,14 @@ try {
   if (interactions) {
     const checks = []
     const state = () => evaluate(`(() => { const n=document.querySelector('.navigator'); return { angle:Number(n.dataset.angle), index:Number(n.dataset.selectedIndex), phase:n.dataset.phase, confirmation:document.querySelector('.confirmation-status')?.textContent ?? '' }; })()`)
-    const geometry = () => evaluate(`(() => { const r=document.querySelector('.wheel-surface').getBoundingClientRect(); return {cx:r.x+r.width/2,cy:r.y+r.height/2,radius:r.width*0.35}; })()`)
+    const geometry = () => evaluate(`(async () => {
+      const r=document.querySelector('.wheel-surface').getBoundingClientRect();
+      const {WHEEL_OUTER_CONTOUR}=await import('/src/features/wheel-navigation/wheelContour.ts');
+      const angle=Number(document.querySelector('.navigator').dataset.angle);
+      const i=Math.round(((270-angle)%360+360)%360), [x,y]=WHEEL_OUTER_CONTOUR[i];
+      return {cx:r.x+r.width/2,cy:r.y+r.height/2,radius:Math.hypot(x-625.95594,y-645.82089)*r.width*.87/1254-6};
+    })()`)
+
     const assert = (condition, label) => { if (!condition) throw new Error(label); checks.push(label) }
     let mouseHeld = false
     const mouse = (type, x, y) => {
@@ -205,9 +212,9 @@ try {
         s.save(); s.translate(x + 200, 225); s.rotate(angle * Math.PI / 180); drawWheel(); s.restore();
         s.strokeStyle = '#00ff88'; s.beginPath(); s.moveTo(x + 190, 225); s.lineTo(x + 210, 225); s.moveTo(x + 200, 215); s.lineTo(x + 200, 235); s.stroke();
         s.save(); s.translate(x + 200, 645); s.rotate(angle * Math.PI / 180); drawWheel(); s.restore();
-        for (const radius of [340*0.11, 340*0.37]) { s.strokeStyle = '#ff4d4d'; s.beginPath(); s.arc(x + 200, 645, radius, 0, 2 * Math.PI); s.stroke(); }
+        // The dedicated band verifier checks the calibrated contour without drawing UI overlays.
       }
-      s.fillStyle = '#222222'; s.fillText('Unmodified candidate; calibrated hub; red circles = broad interior and excluded hub. Overlays are inspection-only.', 12, 842);
+      s.fillStyle = '#222222'; s.fillText('Unmodified candidate; calibrated hub; visible-edge band verification is in verify-wheel-band.mjs. Overlays are inspection-only.', 12, 842);
       const samples = [[0, 0], [526, 320], [526, 526]].map(([x, y]) => ({ x, y, rgba: [...ctx.getImageData(x, y, 1, 1).data] }));
       return { size: [canvas.width, canvas.height], totalPixels: pixels.length / 4, minAlpha, maxAlpha, pixelsWithTransparency: transparent, samples, composite: sheet.toDataURL('image/png').split(',')[1] };
     })()`)
@@ -239,12 +246,16 @@ try {
       rotor.style.transform = 'rotate(0deg)';
       const maxHubDisplacement = Math.max(...positions.flatMap(p => positions.map(q => Math.hypot(p.x-q.x,p.y-q.y))));
       const samples = [[0,0],[627,381],[627,627]].map(([x,y]) => ({x,y,rgba:[...ctx.getImageData(x,y,1,1).data]}));
-      const {getDragBounds} = await import('/src/features/wheel-navigation/presentation.ts');
-      const {isPointInAnnulus} = await import('/src/features/wheel-navigation/wheelMath.ts');
-      const bounds = getDragBounds(size);
-      const eligible = r => isPointInAnnulus({x:r,y:0},{x:0,y:0},bounds.inner,bounds.outer);
-      if(!eligible((bounds.inner+bounds.outer)/2) || !eligible(bounds.inner) || !eligible(bounds.outer) || eligible(0) || eligible(bounds.outer+0.01)) throw new Error('Circle eligibility failed');
-      return { hub, positions, maxHubDisplacement, samples, circleRadius: bounds.outer, effectiveBoundaryWidth: bounds.outer-bounds.inner };
+      const {WHEEL_PRESENTATION} = await import('/src/features/wheel-navigation/presentation.ts');
+      const {isWheelDragPoint} = await import('/src/features/wheel-navigation/wheelHitTest.ts');
+      const {WHEEL_OUTER_CONTOUR} = await import('/src/features/wheel-navigation/wheelContour.ts');
+      const [ax,ay]=WHEEL_OUTER_CONTOUR[0], [bx,by]=WHEEL_OUTER_CONTOUR[1];
+      const length=Math.hypot(bx-ax,by-ay), scale=size*.87/1254;
+      const testPoint=inset=>({x:((ax+bx)/2-625.95594)*scale-(by-ay)/length*inset,y:((ay+by)/2-645.82089)*scale+(bx-ax)/length*inset});
+      const eligible=inset=>isWheelDragPoint(testPoint(inset),{x:0,y:0},size,0);
+      const min=WHEEL_PRESENTATION.dragBandMinInsetPx,max=WHEEL_PRESENTATION.dragBandMaxInsetPx;
+      if(!eligible(min)||!eligible((min+max)/2)||!eligible(max)||eligible(-1)||eligible(max+1)||isWheelDragPoint({x:0,y:0},{x:0,y:0},size,0))throw new Error('Visible-edge band eligibility failed');
+      return { hub, positions, maxHubDisplacement, samples, bandMinInset:WHEEL_PRESENTATION.dragBandMinInsetPx,bandMaxInset:WHEEL_PRESENTATION.dragBandMaxInsetPx };
     })()`
     const calibration = await evaluate(calibrationExpression)
     if (calibration.maxHubDisplacement > 1 || calibration.samples[1].rgba[3] !== 0) throw new Error('T2 asset calibration failed')
@@ -257,7 +268,7 @@ try {
     }
     const evidence = { browser: await evaluate('navigator.userAgent'), layouts, asset: metadata, calibration, calibrationRuns, errors }
     await writeFile('docs/static-verification.json', JSON.stringify(evidence, null, 2))
-    console.log(JSON.stringify({ layouts: layouts.map(x => ({ name: x.name, overflow: x.document[0] > x.clientWidth, stage: x.stage, counter: x.counter })), asset: metadata, calibrationRuns:calibrationRuns.map(x=>({width:x.width,dpr:x.dpr,hubMovement:x.maxHubDisplacement,boundaryWidth:x.effectiveBoundaryWidth})), errors }))
+    console.log(JSON.stringify({ layouts: layouts.map(x => ({ name: x.name, overflow: x.document[0] > x.clientWidth, stage: x.stage, counter: x.counter })), asset: metadata, calibrationRuns:calibrationRuns.map(x=>({width:x.width,dpr:x.dpr,hubMovement:x.maxHubDisplacement,bandInsets:[x.bandMinInset,x.bandMaxInset]})), errors }))
     if (errors.length) throw new Error('Browser runtime errors.')
   }
 } finally {

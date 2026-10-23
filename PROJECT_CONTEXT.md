@@ -358,7 +358,7 @@ Centralize section definitions and valid angles in one configuration instead of 
 
 ## 12. Current implementation status
 
-**Local prototype update — 2026-10-23:** T1–T6 are implemented and verified as recorded in `IMPLEMENTATION_PLAN.md` and `docs/T2_T6_IMPLEMENTATION.md`. The user authorized the supplied transparent candidate and temporary minor visual differences. The original asset remains intact. The prototype uses a calibrated fixed hub and an invisible inscribed circular drag area covering rim, spokes and controls; only the central confirmation hub is excluded. Pointer dragging, snapping, synchronized track, keyboard controls and explicit confirmation are functional. Real routes, destination pages and cinematic transitions remain deferred. The historical Figma/initial-planning inventory below is retained for context.
+**Local prototype update — 2026-10-23:** T1–T6 are implemented and verified as recorded in `IMPLEMENTATION_PLAN.md` and `docs/T2_T6_IMPLEMENTATION.md`. The user authorized the supplied transparent candidate and temporary minor visual differences. The original asset remains intact. The prototype uses a calibrated fixed hub and an invisible band 1 to 45 CSS pixels inside the calibrated visible outer contour; the central confirmation hub remains excluded. Pointer dragging, snapping, synchronized track, keyboard controls and explicit confirmation are functional. Real routes, destination pages and cinematic transitions remain deferred. The historical Figma/initial-planning inventory below is retained for context.
 
 **Already designed in Figma:**
 
@@ -461,4 +461,6 @@ These rules take priority over generic suggestions to automate project initializ
 
 **Instruction for the next conversation:** Treat this document as the approved visual and functional project context. From here onward, focus on designing and implementing the **isolated steering-wheel mechanics**. Preserve the decisions above and **do not start building the rest of the portfolio yet**.
 
-Current interaction revision: the narrow perimeter ring is superseded by a circle of radius 0.37 times stage width, minus the central confirmation target. Keyboard focus uses a compact badge rather than an outer circle. See docs/INTERIOR_DRAG.md.
+Current interaction revision: the broad circle is superseded by an invisible band 1 to 45 CSS pixels inside the visible outer contour. The contour follows the unchanged artwork scale, calibrated hub and rotation. Keyboard focus retains the compact badge. See docs/VISIBLE_EDGE_BAND.md.
+
+**T7/T8 update — 2026-10-23:** The user authorized both phases after approving the 45px band. The accessibility/mobile baseline and automated cross-browser handoff are complete: 127 unit/integration tests, 43 browser tests and 7,244 dedicated Chrome band assertions passed. Two Chromium-only protocol-touch cases are intentionally skipped in Firefox/WebKit. Endpoint focus and desktop control overlap are resolved. Physical-device and screen-reader checks remain pending. See [current verification report](docs/T7_T8_VALIDATION.md); prior geometry reports are historical.

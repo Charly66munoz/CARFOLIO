@@ -3,8 +3,9 @@ import type { PointerEvent as ReactPointerEvent, KeyboardEvent as ReactKeyboardE
 import { gsap } from 'gsap'
 import { HOME_INDEX, SECTIONS } from './sections'
 import type { SectionId } from './sections'
-import { advanceWheelAngle, getPointerAngle, isPointInAnnulus, nearestSectionIndex } from './wheelMath'
-import { getDragBounds } from './presentation'
+import { advanceWheelAngle, getPointerAngle, nearestSectionIndex } from './wheelMath'
+import { getHubRadius } from './presentation'
+import { isWheelDragPoint } from './wheelHitTest'
 
 type Phase = 'idle' | 'armed' | 'dragging' | 'settling'
 interface NavigationState { angleDeg: number; selectedIndex: number; phase: Phase }
@@ -90,7 +91,7 @@ export function useWheelNavigation(onConfirm: (section: SectionId) => void) {
     owned.dragged = true
     const center = { x: owned.cx, y: owned.cy }
     const polar = getPointerAngle({ x, y }, center)
-    const inside = Math.hypot(x - owned.cx, y - owned.cy) < getDragBounds(owned.rect.width).inner
+    const inside = Math.hypot(x - owned.cx, y - owned.cy) < getHubRadius(owned.rect.width)
     const angleDeg = inside || owned.previousPolar === null
       ? current.current.angleDeg
       : advanceWheelAngle(current.current.angleDeg, owned.previousPolar, polar)
@@ -103,8 +104,7 @@ export function useWheelNavigation(onConfirm: (section: SectionId) => void) {
     const surface = event.currentTarget
     const rect = surface.getBoundingClientRect()
     const center = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 }
-    const bounds = getDragBounds(rect.width)
-    if (!isPointInAnnulus({ x: event.clientX, y: event.clientY }, center, bounds.inner, bounds.outer)) return
+    if (!isWheelDragPoint({ x: event.clientX, y: event.clientY }, center, rect.width, state.angleDeg)) return
     const owned: Gesture = {
       id: event.pointerId, surface, rect, cx: center.x, cy: center.y,
       startX: event.clientX, startY: event.clientY,
@@ -126,11 +126,10 @@ export function useWheelNavigation(onConfirm: (section: SectionId) => void) {
     if (owned?.id === event.pointerId) sample(owned, event.clientX, event.clientY)
     else if (!owned && event.pointerType === 'mouse') {
       const rect = event.currentTarget.getBoundingClientRect()
-      const bounds = getDragBounds(rect.width)
-      const eligible = isPointInAnnulus({ x: event.clientX, y: event.clientY }, { x: rect.left + rect.width/2, y: rect.top + rect.height/2 }, bounds.inner, bounds.outer)
+      const eligible = isWheelDragPoint({ x: event.clientX, y: event.clientY }, { x: rect.left + rect.width/2, y: rect.top + rect.height/2 }, rect.width, state.angleDeg)
       event.currentTarget.style.cursor = eligible ? 'grab' : ''
     }
-  }, [sample])
+  }, [sample, state.angleDeg])
 
   const onPointerUp = useCallback((event: ReactPointerEvent<HTMLDivElement>) => {
     const owned = gesture.current

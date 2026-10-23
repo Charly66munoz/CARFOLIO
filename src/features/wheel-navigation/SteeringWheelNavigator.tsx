@@ -5,6 +5,7 @@ import { SteeringWheel } from './SteeringWheel'
 import { useWheelNavigation } from './useWheelNavigation'
 import { SECTIONS } from './sections'
 import type { SectionId } from './sections'
+import { WHEEL_PRESENTATION } from './presentation'
 
 interface SteeringWheelNavigatorProps { onConfirm: (section: SectionId) => void }
 
@@ -27,14 +28,14 @@ export function SteeringWheelNavigator({ onConfirm }: SteeringWheelNavigatorProp
         <div><p>02 — CLICK TO ENTER</p><span>Confirm your destination</span></div>
       </div>
       <div className="navigator-controls">
-        <button type="button" aria-label="Previous section" disabled={!navigation.canConfirm || navigation.state.selectedIndex === 0}
-          onClick={() => navigation.step(-1)} onKeyDown={event => navigation.onKeyDown(event)}>←</button>
+        <button type="button" aria-label="Previous section" disabled={!navigation.canConfirm} aria-disabled={navigation.state.selectedIndex === 0}
+          onClick={() => { if (navigation.state.selectedIndex > 0) navigation.step(-1) }} onKeyDown={event => navigation.onKeyDown(event)}>←</button>
         <button type="button" disabled={!navigation.canConfirm} onClick={navigation.confirm}
           onKeyDown={event => navigation.onKeyDown(event)}>ENTER {selected.label}</button>
-        <button type="button" aria-label="Next section" disabled={!navigation.canConfirm || navigation.state.selectedIndex === SECTIONS.length - 1}
-          onClick={() => navigation.step(1)} onKeyDown={event => navigation.onKeyDown(event)}>→</button>
+        <button type="button" aria-label="Next section" disabled={!navigation.canConfirm} aria-disabled={navigation.state.selectedIndex === SECTIONS.length - 1}
+          onClick={() => { if (navigation.state.selectedIndex < SECTIONS.length - 1) navigation.step(1) }} onKeyDown={event => navigation.onKeyDown(event)}>→</button>
       </div>
-      <p id="keyboard-help" className="sr-only">Drag the wheel outside its center or use arrow keys to select. Enter confirms. Home key selects ABOUT; the HOME section is the middle option. End key selects STACK.</p>
+      <p id="keyboard-help" className="sr-only">Drag {WHEEL_PRESENTATION.dragBandMinInsetPx} to {WHEEL_PRESENTATION.dragBandMaxInsetPx} pixels inside the wheel rim or use arrow keys or the previous and next buttons to select. Enter confirms. Home key selects ABOUT; the HOME section is the middle option. End key selects STACK.</p>
       <p className="sr-only" aria-live="polite">{selected.label} selected. Confirm to enter.</p>
     </section>
   )

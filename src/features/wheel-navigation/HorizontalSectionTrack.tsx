@@ -27,7 +27,7 @@ export function HorizontalSectionTrack({ angleDeg, selectedIndex, displayIndex, 
   }, [])
   const fractionalIndex = getFractionalIndex(angleDeg)
   return (
-    <div className="section-navigation" aria-label="Portfolio sections">
+    <nav className="section-navigation" aria-label="Portfolio sections">
       <p className="section-counter">{String(displayIndex + 1).padStart(2, '0')} / {String(SECTIONS.length).padStart(2, '0')}</p>
       <div className="track-viewport" ref={viewportRef}>
         <ol className="section-track" style={geometry.slot ? { marginLeft: 0, transform: `translateX(${getTrackX(angleDeg, geometry.viewport, geometry.slot)}px)` } : undefined}>
@@ -53,6 +53,6 @@ export function HorizontalSectionTrack({ angleDeg, selectedIndex, displayIndex, 
         <span>← &nbsp; TURN LEFT</span>
         <span>TURN RIGHT &nbsp; →</span>
       </div>
-    </div>
+    </nav>
   )
 }
