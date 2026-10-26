@@ -107,3 +107,33 @@ button:focus-visible { outline: 2px solid var(--color-silver); outline-offset: 4
   .site-footer { flex-wrap: wrap; font-size: 9px; gap: 16px; }
   .contact-labels { gap: 14px; padding-right: 0; }
 }
+
+/* Cinematic presentation is independent of wheel interaction geometry. */
+.cinematic-scenes { position: relative; display: grid; }
+.navigation-scene, .section-scene { grid-area: 1 / 1; min-width: 0; }
+.section-scene { visibility: hidden; opacity: 0; }
+.cinematic-scenes:not([data-phase='navigation']) .wheel-stage { visibility: hidden; }
+.cinematic-scenes[data-phase='section'] .navigation-scene { visibility: hidden; }
+.destination-placeholder { min-height: 776px; padding: 130px clamp(12px, 6vw, 96px) 100px; }
+.destination-eyebrow { color: var(--color-silver); font-size: 10px; letter-spacing: 2px; }
+.destination-placeholder h2 { margin: 36px 0 28px; color: var(--color-ice); font-size: clamp(36px, 7vw, 90px); font-weight: 500; letter-spacing: 0.08em; line-height: 1.1; }
+.destination-placeholder h2:focus { outline: none; }
+.destination-rule { width: 36px; height: 2px; background: var(--color-sport); margin-bottom: 32px; }
+.destination-description { color: var(--color-ice); font-size: clamp(16px, 2vw, 20px); }
+.destination-hint { margin-top: 16px; color: var(--color-silver); font-size: 12px; line-height: 1.8; }
+.cinematic-layer { position: fixed; inset: 0; z-index: 20; pointer-events: none; }
+.speed-streaks { position: absolute; inset: 0; overflow: clip; }
+.speed-streak { position: absolute; width: clamp(70px, 13vw, 190px); height: 1px; visibility: hidden; opacity: 0; background: linear-gradient(90deg, transparent, var(--color-silver) 60%, transparent); transform-origin: center; }
+.cinematic-wheel { position: absolute; left: 0; top: 0; visibility: hidden; transform-origin: 0 0; pointer-events: none; }
+.floating-wheel-control { position: absolute; top: calc(50% - 36px); right: max(24px, env(safe-area-inset-right)); width: 72px; height: 72px; padding: 0; border: 0; border-radius: 50%; background: transparent; visibility: hidden; pointer-events: none; cursor: pointer; }
+.cinematic-layer[data-phase='section'] .floating-wheel-control { visibility: visible; pointer-events: auto; }
+.confirmation-status:focus { outline: none; }
+.floating-wheel-control::after { content: 'NAV'; position: absolute; bottom: -18px; left: 0; width: 100%; color: var(--color-silver); font: 9px var(--font-sans); letter-spacing: 2px; text-align: center; }
+@media (max-width: 760px) {
+  .destination-placeholder { min-height: 65svh; padding-top: 90px; padding-right: 12px; }
+  .destination-placeholder h2 { letter-spacing: 0.04em; }
+  .floating-wheel-control { top: auto; bottom: max(36px, calc(20px + env(safe-area-inset-bottom))); right: max(16px, env(safe-area-inset-right)); width: 56px; height: 56px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .speed-streaks { display: none; }
+}

@@ -2,11 +2,23 @@ import statusIndicator from './assets/status-indicator.svg'
 import { SteeringWheelNavigator } from './features/wheel-navigation/SteeringWheelNavigator'
 import { useState } from 'react'
 import type { SectionId } from './features/wheel-navigation/sections'
+import { useCinematicTransition } from './features/cinematic-transition/useCinematicTransition'
+import { CinematicLayer } from './features/cinematic-transition/CinematicLayer'
+import { SectionPlaceholder } from './features/cinematic-transition/SectionPlaceholder'
 
 export default function App() {
   const [confirmation, setConfirmation] = useState<{ section: SectionId; count: number } | null>(null)
+  const { state, enter, restore, rememberActivation, navigationRef, wheelStageRef, contentRef, proxyRef, dockRef, statusRef, streaksRef } = useCinematicTransition()
+
+  const confirm = (section: SectionId) => {
+    if (state.phase !== 'navigation') return
+    if (section !== 'home' && !enter(section)) return
+    setConfirmation(previous => ({ section, count: (previous?.count ?? 0) + 1 }))
+  }
+
   return (
-    <main className="portfolio-shell bg-carbon text-ice">
+    <>
+      <main className="portfolio-shell bg-carbon text-ice">
       <header className="site-header">
         <div className="identity mb-1.25">
           <span className="monogram" aria-hidden="true">
@@ -23,15 +35,16 @@ export default function App() {
           <span>2026</span>
         </p>
       </header>
-      <SteeringWheelNavigator
-        onConfirm={(section) =>
-          setConfirmation((previous) => ({
-            section,
-            count: (previous?.count ?? 0) + 1,
-          }))
-        }
-      />
-      <p className="confirmation-status" role="status" aria-live="polite">
+      <div className="cinematic-scenes" data-phase={state.phase}>
+        <div className="navigation-scene" ref={navigationRef} inert={state.phase !== 'navigation'}
+          onClickCapture={rememberActivation} onKeyDownCapture={rememberActivation}>
+          <SteeringWheelNavigator wheelStageRef={wheelStageRef} onConfirm={confirm} />
+        </div>
+        <div className="section-scene" ref={contentRef} inert={state.phase !== 'section'} aria-hidden={state.phase === 'navigation'}>
+          {state.destination && <SectionPlaceholder destination={state.destination} />}
+        </div>
+      </div>
+      <p className="confirmation-status" role="status" aria-live="polite" tabIndex={-1} ref={statusRef}>
         {confirmation
           ? `${confirmation.section.toUpperCase()} confirmed · ${confirmation.count}`
           : "Select a section, then confirm to enter."}
@@ -43,6 +56,8 @@ export default function App() {
           GITHUB <span>/</span> LINKEDIN <span>/</span> EMAIL
         </p>
       </footer>
-    </main>
-  );
+      </main>
+      <CinematicLayer state={state} proxyRef={proxyRef} dockRef={dockRef} streaksRef={streaksRef} onRestore={restore} />
+    </>
+  )
 }

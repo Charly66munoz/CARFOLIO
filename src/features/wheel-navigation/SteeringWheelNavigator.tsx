@@ -6,10 +6,11 @@ import { useWheelNavigation } from './useWheelNavigation'
 import { SECTIONS } from './sections'
 import type { SectionId } from './sections'
 import { WHEEL_PRESENTATION } from './presentation'
+import type { Ref } from 'react'
 
-interface SteeringWheelNavigatorProps { onConfirm: (section: SectionId) => void }
+interface SteeringWheelNavigatorProps { onConfirm: (section: SectionId) => void; wheelStageRef?: Ref<HTMLDivElement> }
 
-export function SteeringWheelNavigator({ onConfirm }: SteeringWheelNavigatorProps) {
+export function SteeringWheelNavigator({ onConfirm, wheelStageRef }: SteeringWheelNavigatorProps) {
   const navigation = useWheelNavigation(onConfirm)
   const displayIndex = navigation.state.phase === 'armed' || navigation.state.phase === 'dragging' ? navigation.previewIndex : navigation.state.selectedIndex
   const selected = SECTIONS[navigation.state.selectedIndex]
@@ -22,7 +23,7 @@ export function SteeringWheelNavigator({ onConfirm }: SteeringWheelNavigatorProp
       </div>
       <HorizontalSectionTrack angleDeg={navigation.state.angleDeg} selectedIndex={navigation.state.selectedIndex} displayIndex={displayIndex}
         activateLabel={navigation.activateLabel} onKeyDown={navigation.onKeyDown} />
-      <SteeringWheel {...navigation} />
+      <SteeringWheel {...navigation} stageRef={wheelStageRef} />
       <div className="interaction-hints">
         <div><p>01 — DRAG TO SELECT</p><span>Rotate the wheel to browse</span></div>
         <div><p>02 — CLICK TO ENTER</p><span>Confirm your destination</span></div>

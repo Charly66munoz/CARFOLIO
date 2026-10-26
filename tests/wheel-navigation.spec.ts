@@ -15,6 +15,14 @@ test.beforeEach(async ({ page }) => {
 test.afterEach(() => { expect(runtimeErrors).toEqual([]) })
 test.beforeAll(async ({ browser }, info) => { console.log(`${info.project.name}: ${browser.version()}`) })
 
+// Confirmation now enters a placeholder. Restore through the real UI before
+// continuing assertions against the same mounted mechanical controller.
+async function returnToNavigation(page: Page) {
+  await expect(page.locator('.cinematic-scenes')).toHaveAttribute('data-phase', 'section')
+  await page.getByRole('button', { name: 'Open portfolio navigation' }).click()
+  await expect(page.locator('.cinematic-scenes')).toHaveAttribute('data-phase', 'navigation')
+}
+
 async function settled(page: Page, index: number) {
   await expect(page.locator('.navigator')).toHaveAttribute('data-phase', 'idle')
   await expect(page.locator('.navigator')).toHaveAttribute('data-angle', String(SECTIONS[index].angleDeg))
@@ -79,6 +87,7 @@ test('T7: keyboard Tab order, semantics, all sections and explicit confirmation'
   await slider.press('Enter')
   await expect(page.getByRole('status')).toHaveText('STACK confirmed · 1')
   expect(page.url()).toBe(url)
+  await returnToNavigation(page)
   await slider.press('Tab')
   await expect(page.getByRole('button', { name: 'Confirm STACK', exact: true })).toBeFocused()
   await page.keyboard.press('Shift+Tab')
@@ -198,10 +207,12 @@ test('T8: inactive labels select; native buttons confirm once; active gestures r
   await expect(page.getByRole('status')).toContainText('Select a section')
   await projects.click()
   await expect(page.getByRole('status')).toHaveText('PROJECTS confirmed · 1')
+  await returnToNavigation(page)
   const enter = page.getByRole('button', { name: 'ENTER PROJECTS', exact: true })
   await enter.focus()
   await enter.press('Enter')
   await expect(page.getByRole('status')).toHaveText('PROJECTS confirmed · 2')
+  await returnToNavigation(page)
   await beginDrag(page)
   await page.keyboard.press('Enter')
   await expect(page.getByRole('status')).toHaveText('PROJECTS confirmed · 2')
@@ -217,8 +228,9 @@ test('T8: rapid selections and confirmation during snap use the latest committed
   await slider.press('Home')
   await slider.press('ArrowRight')
   await slider.press('Enter')
-  await settled(page, 1)
   await expect(page.getByRole('status')).toHaveText('CONTACT confirmed · 1')
+  await returnToNavigation(page)
+  await settled(page, 1)
   await page.keyboard.down('Enter')
   await page.keyboard.down('Enter')
   await page.keyboard.up('Enter')

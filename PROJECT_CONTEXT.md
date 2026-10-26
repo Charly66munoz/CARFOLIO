@@ -358,7 +358,7 @@ Centralize section definitions and valid angles in one configuration instead of 
 
 ## 12. Current implementation status
 
-**Local prototype update — 2026-10-23:** T1–T6 are implemented and verified as recorded in `IMPLEMENTATION_PLAN.md` and `docs/T2_T6_IMPLEMENTATION.md`. The user authorized the supplied transparent candidate and temporary minor visual differences. The original asset remains intact. The prototype uses a calibrated fixed hub and an invisible band 1 to 45 CSS pixels inside the calibrated visible outer contour; the central confirmation hub remains excluded. Pointer dragging, snapping, synchronized track, keyboard controls and explicit confirmation are functional. Real routes, destination pages and cinematic transitions remain deferred. The historical Figma/initial-planning inventory below is retained for context.
+**Local prototype update — 2026-10-23:** T1–T6 are implemented and verified as recorded in `IMPLEMENTATION_PLAN.md` and `docs/T2_T6_IMPLEMENTATION.md`. The user authorized the supplied transparent candidate and temporary minor visual differences. The original asset remains intact. The prototype uses a calibrated fixed hub and an invisible band 1 to 45 CSS pixels inside the calibrated visible outer contour; the central confirmation hub remains excluded. Pointer dragging, snapping, synchronized track, keyboard controls and explicit confirmation are functional. Real routes and full portfolio pages remain deferred. The separately approved cinematic placeholder prototype is now ready for manual visual review; see Section 15. The historical Figma/initial-planning inventory below is retained for context.
 
 **Already designed in Figma:**
 
@@ -464,3 +464,11 @@ These rules take priority over generic suggestions to automate project initializ
 Current interaction revision: the broad circle is superseded by an invisible band 1 to 45 CSS pixels inside the visible outer contour. The contour follows the unchanged artwork scale, calibrated hub and rotation. Keyboard focus retains the compact badge. See docs/VISIBLE_EDGE_BAND.md.
 
 **T7/T8 update — 2026-10-23:** The user authorized both phases after approving the 45px band. The accessibility/mobile baseline and automated cross-browser handoff are complete: 127 unit/integration tests, 43 browser tests and 7,244 dedicated Chrome band assertions passed. Two Chromium-only protocol-touch cases are intentionally skipped in Firefox/WebKit. Endpoint focus and desktop control overlap are resolved. Physical-device and screen-reader checks remain pending. See [current verification report](docs/T7_T8_VALIDATION.md); prior geometry reports are historical.
+
+## 15. Current phase — Cinematic placeholder prototype
+
+The user separately approved and authorized the cinematic architecture and incremental implementation after the mechanics baseline was verified on `cinematic-feature` at `d945e4a`. This supersedes the earlier isolated-phase exclusions only for the local cinematic placeholder prototype.
+
+The prototype now implements approximately 1.8s entry, restrained abstract streaks/decorative blur, a shrinking wheel and floating restore control, approximately 1.2s reversal, Escape cancellation, and a reduced-motion fade. HOME stays in main navigation; the other four destinations show placeholder content only. The existing mechanical controller, calibrated 1–45px contour band, mapping, snapping and artwork are unchanged. Cinematic state and page content remain independent.
+
+Implementation stages and actual checks are recorded in `IMPLEMENTATION_PLAN.md` Section 11 and `docs/CINEMATIC_PROTOTYPE.md`. The prototype is ready for manual visual review, not final aesthetic sign-off. Actual-device fluidity, native Safari and screen-reader checks remain pending. Full portfolio pages, routing, sound and deployment remain deferred. No Git branch change, commit, dependency installation, remote write or development-server management occurred during this phase.

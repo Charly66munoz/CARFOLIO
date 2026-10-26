@@ -234,7 +234,7 @@ Do not introduce generic interpolation utilities or additional synchronization a
 
 ### T2 asset-validation gate
 
-The original neutral HOME wheel from Figma (`5:22` in frame `5:2`) was inspected and retained unchanged. On 2026-10-23 the user supplied and authorized a transparent candidate for the prototype, accepting minor visual differences until final refinement. It was copied from `dist/assets/steering-wheel-neutral-DLpvQqP8.png` to `src/assets/steering-wheel-transparent-candidate.png` before any build, without overwriting the original.
+The original neutral HOME wheel from Figma (`5:22` in frame `5:2`) was inspected and retained unchanged. On 2026-10-23 the user supplied and authorized a transparent candidate for the prototype, accepting minor visual differences until final refinement. It was copied from `dist/assets/steering-wheel-neutral-DLpvQqP8.png` to `src/assets/steering-wheel-transparent-candidate.webp` before any build, without overwriting the original.
 
 Verify:
 
@@ -447,3 +447,37 @@ T1–T6 are complete under the user's explicit authorization. The original and c
 ## Targeted pointer corrections ? 2026-10-23
 
 The user authorized only expanding the invisible boundary to 1px plus 5px tolerance per side and suppressing pointer-induced wheel focus circles while retaining keyboard focus. See `docs/POINTER_CORRECTIONS.md`. Earlier 7px measurements remain historical evidence. The desktop circle/control overlap and endpoint auxiliary-button focus loss remain known, unresolved audit findings; this correction does not mark them fixed.
+
+## 11. Approved cinematic prototype — current phase
+
+The user approved the cinematic architecture and sequential implementation in this conversation. This section supersedes the earlier cinematic scope exclusions for the placeholder prototype only. Preserve historical T1–T8 records; current mechanics are the contour-based 1–45 CSS-pixel baseline at commit `d945e4a`, not the older circle/ring reports above.
+
+Baseline revalidated before implementation: 127 unit/integration tests, lint, TypeScript and production build passed; Chromium 15 and WebKit 14 browser checks passed, Firefox 14 passed on a browser-permission retry, with two expected Chromium-only touch skips overall. The contour verifier passed 7,244 assertions with no external-control interceptions. Artwork hashes match. T7's defined baseline and T8 automation/handoff are complete; physical Android/iOS, native Safari and screen-reader checks remain pending. No new mechanical work is authorized by this phase.
+
+### Fixed implementation decisions
+
+- HOME confirms without leaving navigation. The other four selections enter placeholder content only; no routes, full portfolio pages, audio or deployment.
+- Keep `useWheelNavigation`, section definitions, contour/hit testing and artwork assets unchanged. The mounted navigator remains the only mechanical controller.
+- A shared decorative artwork component renders the stationary wheel and cinematic copy with identical calibration. Only one is visible at a time; the copy has no mechanical controls. The full navigator is inert during travel and section viewing.
+- Own cinematic state separately: navigation → entering → section → restoring → navigation. Capture destination once per accepted confirmation. Ignore repeated requests; Escape reverses entry.
+- Use existing GSAP: approximately 1.8s entry and 1.2s reverse, restrained abstract streaks and decorative blur, no shake/overshoot/literal scenery. Reduced motion uses a 150ms fade without spatial movement.
+- Desktop floating control: 72px at right-center; mobile: 56px at bottom-right with safe-area spacing. Restore previous selection, angle, navigation scroll and focus.
+- Animate transforms/opacity outside React's render loop. Measure at boundaries; settle at the requested endpoint on resize, hiding or a new reduced-motion preference. Clean up owned animations/listeners/temporary scroll styles.
+- No Git mutations or development-server management. Browser checks may use their own isolated production preview, never reusing the manually managed server.
+
+### Ordered tasks and gates
+
+| Task | Status | Gate |
+|---|---|---|
+| C1 — Baseline and approved phase | Complete | `cinematic-feature` is clean at `d945e4a`; approved contour geometry and prior baseline checks confirmed. |
+| C2 — State and placeholder contract | Complete | 130 tests, TypeScript and lint passed. HOME and synchronous request guards verified independently of mechanics. |
+| C3 — Shared artwork and continuous handoff | Complete — automated gate | Desktop/mobile checks passed across all four destinations in Chromium, Firefox and WebKit: image/shadow handoff within 0.25px, one visible wheel per sampled frame, exact returned stage geometry and maximum 1/255 channel rasterization difference. Screenshots inspected. |
+| C4 — Cinematic choreography | Complete — automated gate | All three engines passed timed entry/return, fixed rotation, streak appearance/cleanup and heading-focus checks. |
+| C5 — Accessibility and lifecycle | Complete — automated gate | All three engines passed HOME/duplicate guards, reduced motion, focus/scroll restoration, Escape, resize, motion-preference changes and synthetic hiding. Lifecycle checks interrupt both entry and restoration. |
+| C6 — Regression and manual-review handoff | Ready for manual visual review | 130 unit/integration tests, type checking, lint and production build passed. Initial full sweep passed 43 mechanical browser cases (2 capability skips); two cinematic issues were corrected, then all 39 affected cross-browser checks passed. Current-build band verifier passed 7,244 assertions with zero external-control interceptions. User aesthetic approval and actual-device fluidity review remain pending. |
+
+Implementation progress and actual checks will be recorded below as each gate passes. No phase is considered aesthetically complete before the user's manual visual review.
+
+C3 diagnostics: initial byte-exact screenshot comparison detected a maximum 1/255 channel difference over 1,325 pixels after a compositing round trip, with mean absolute channel difference 0.0018/255 and identical geometry. The gate now explicitly permits only that rasterization tolerance and samples visibility on every animation frame. Mobile selection in the verifier uses keyboard controls because inactive track labels are intentionally clipped. No mechanical changes were made to resolve these test-harness findings.
+
+Final implementation evidence and manual review checklist: `docs/CINEMATIC_PROTOTYPE.md`. The first full run found a Firefox carrier-style cleanup issue and WebKit pointer-invoker focus difference. Both were fixed outside the wheel mechanics and verified by the final 39-case targeted rerun. Headless frame-time samples are recorded explicitly; they do not establish steady 60fps or physical-device performance. No branch changes, commits, dependency installations, remote writes or development-server management occurred. The cinematic phase remains pending user visual review rather than being declared aesthetically complete.

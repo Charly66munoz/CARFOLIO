@@ -1,5 +1,11 @@
 # Carfolio
 
+## Cinematic prototype — current phase
+
+The approved cinematic prototype is ready for manual visual review on top of `d945e4a`. Confirm ABOUT, CONTACT, PROJECTS or STACK to enter placeholder content; HOME remains the main navigation scene. Use the floating wheel to return, or Escape to reverse an in-progress entry. Reduced motion uses a short fade. The mechanical controller, 1–45px contour band, mapping and artwork remain unchanged.
+
+See [cinematic implementation and review](docs/CINEMATIC_PROTOTYPE.md) and section 11 of `IMPLEMENTATION_PLAN.md` for current progress. The earlier delivery notes below describe the mechanics baseline. Physical-device, native Safari and screen-reader checks remain pending. Do not interpret their pending status as incomplete T7/T8 automated delivery.
+
 Local steering-wheel portfolio prototype for Agustín López. React, Vite, strict TypeScript, Tailwind CSS and GSAP core. The approved design and mechanical contracts are in `PROJECT_CONTEXT.md` and `IMPLEMENTATION_PLAN.md`.
 
 ## Current delivery
@@ -11,7 +17,7 @@ Local steering-wheel portfolio prototype for Agustín López. React, Vite, stric
 - **T7 implemented:** navigation semantics, configuration-derived help, retained endpoint-button focus, keyboard alternatives, reduced motion, mobile scrolling and confirmation controls separated from the wheel surface.
 - **T8 automated validation complete:** 43 browser tests passed, with 2 intentional Chromium-only capability skips. See [current verification and remaining manual checks](docs/T7_T8_VALIDATION.md) for actual results. Physical-device and screen-reader checks remain pending. Contact labels remain reference text; no destination pages or routes exist.
 
-Drag within the invisible band 1 to 45 CSS pixels inside the visible wheel rim. The band follows the artwork as it rotates; the central hub remains reserved for confirmation. Use Left/Right (also Down/Up), previous/next buttons or section labels as alternatives. Home key selects ABOUT; End selects STACK. Enter, the wheel center, the active label or the ENTER button confirms. An inactive label selects on the first activation and confirms on a later activation. Feedback records the confirmed section without navigating.
+Drag within the invisible band 1 to 45 CSS pixels inside the visible wheel rim. The band follows the artwork as it rotates; the central hub remains reserved for confirmation. Use Left/Right (also Down/Up), previous/next buttons or section labels as alternatives. Home key selects ABOUT; End selects STACK. Enter, the wheel center, the active label or the ENTER button confirms. An inactive label selects on the first activation and confirms on a later activation. The current prototype transitions to placeholder content after confirmation; HOME stays in navigation.
 
 The configurable band insets and hub size are in `src/features/wheel-navigation/presentation.ts`. The fixed contour is calibrated from the unchanged transparent asset; runtime hit testing follows its scale, hub and rotation. Keyboard focus retains the compact badge. Only the artwork rotates; lighting, shadow and interaction surface stay fixed.
 
