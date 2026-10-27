@@ -1,5 +1,7 @@
 # Application health audit and safe fixes
 
+> Historical audit checkpoint: 2026-10-25, before Race Start implementation. Its measurements, safe-fix evidence and limitations remain valid only for that checkpoint. The startup recommendations below were superseded by the [final Race Start contract](RACE_START_IMPLEMENTATION_PLAN.md), including fixed light cadence, no resource-readiness gate and 15-minute localStorage expiry. Race Start is now implemented; see [latest timing and incomplete validation](RACE_START_TIMING.md). Old branch/status snapshots are historical, not current workspace state.
+
 Date: 25 October 2026, America/Buenos_Aires. Scope: technical audit, isolated safe fixes, cinematic reuse assessment and a Race Start implementation proposal. **The Race Start loader is not implemented.**
 
 ## 1. Baseline and scope

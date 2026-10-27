@@ -6,6 +6,7 @@ import { WHEEL_OUTER_CONTOUR } from '../src/features/wheel-navigation/wheelConto
 
 let runtimeErrors: string[]
 test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('gt3-race-start-expires-at', String(Date.now() + 900000)))
   runtimeErrors = []
   page.on('pageerror', error => runtimeErrors.push(error.message))
   await page.goto('/')
@@ -252,6 +253,7 @@ for (const width of [320, 1440]) for (const dpr of [1, 2]) {
   test(`T8: band boundaries at ${width}px / DPR ${dpr}`, async ({ browser }) => {
     test.setTimeout(90_000)
     const context = await browser.newContext({ viewport: { width, height: 1000 }, deviceScaleFactor: dpr, reducedMotion: 'reduce' })
+    await context.addInitScript(() => localStorage.setItem('gt3-race-start-expires-at', String(Date.now() + 900000)))
     const page = await context.newPage()
     const errors: string[] = []
     page.on('pageerror', error => errors.push(error.message))

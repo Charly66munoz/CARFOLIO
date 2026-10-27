@@ -1,19 +1,18 @@
-# Implementation Plan — Isolated GT3 Steering-Wheel Navigation
+# Implementation Plan — GT3 Portfolio Prototype
 
 ## 1. Authority, authorization, and current progress
 
-This document records the finalized implementation plan discussed with the user, including the asset-validation gate in T2 and early real-browser interaction check in T4.
+This document records implemented contracts, historical acceptance gates and remaining work. Read `AGENTS.md`, `PROJECT_CONTEXT.md` and this plan completely before project-specific recommendations or changes. Operational restrictions belong to `AGENTS.md`; product requirements belong to `PROJECT_CONTEXT.md`. Report contradictions rather than silently changing approved requirements. This plan does not authorize implementation.
 
-- Architecture: approved in principle, with the requested refinements incorporated below.
-- Authorization: on 2026-10-23 the user explicitly authorized completing T2 with the supplied transparent candidate and proceeding sequentially through T4, T5 and T6, including targeted positioning corrections and temporary minor visual differences. No approval is required between these authorized tasks. The user subsequently authorized T7 and T8 in this session. Full pages, routing, cinematic transitions and publishing remain outside this delivery.
-- Current progress: T1–T6 are complete for the local prototype. T2 passes with the authorized candidate and calibrated contour band. See `docs/T2_ASSET_VALIDATION.md` and `docs/T2_T6_IMPLEMENTATION.md` for measurements, checks and remaining verification. T7 accessibility/mobile improvements and T8 browser automation are covered by docs/T7_T8_VALIDATION.md; that report separates verified results from pending manual checks.
-- Read the current `AGENTS.md`, `PROJECT_CONTEXT.md`, and this file completely at the beginning of each new project session before making project-specific recommendations or changes.
-- `AGENTS.md` governs operational restrictions. `PROJECT_CONTEXT.md` governs approved product, visual, and interaction requirements. This plan governs architecture, tasks, and acceptance criteria where consistent with those documents.
-- Report inconsistencies rather than silently resolving them. Update progress only from actual implementation and verification evidence.
+**Implemented:** T1–T8 steering mechanics and accessibility/mobile baseline; cinematic navigation to four placeholders and floating restoration; Race Start with explicit activation, 15-minute expiry and HOME handoff. Full section content and routes are absent. HOME, calibrated mechanics and cinematic behavior remain protected.
+
+**Design only:** Engineering Dossier is the approved direction for internal sections. The specific ABOUT layout remains under review and is not implemented. Discussion does not authorize implementation.
+
+**Evidence:** Sections 7, 10 and 11 retain original acceptance gates and dated results. The latest available application results are summarized in Section 12; no application tests were rerun during the 2026-10-26 documentation cleanup. A completed automated gate does not imply physical-device validation or aesthetic sign-off.
 
 ## 2. Scope and fixed behavior
 
-Build a local React + Vite + TypeScript + Tailwind CSS prototype using native Pointer Events and GSAP for snapping.
+The local prototype uses React + Vite + TypeScript + Tailwind CSS, native Pointer Events and GSAP for snapping. The following mechanical contracts remain fixed.
 
 Preserve the approved [Figma design](https://www.figma.com/design/oEXjYLVP8tfpWG5PO16x1o), palette, composition, and steering convention. The corrected Figma states and `PROJECT_CONTEXT.md` are consistent.
 
@@ -39,7 +38,7 @@ Approved interaction contracts:
 - Selection, pointer release, and animation completion never automatically confirm.
 - Cancellation restores the gesture-start committed section.
 
-The deliverable excludes actual portfolio pages, routing, cinematic transitions, minimized navigation, sound, backend work, publishing, and deployment. Basic mobile usability is included; full responsive art direction remains a later phase.
+The original T1–T8 delivery excluded cinematic transitions and minimized navigation; the separately approved prototype now includes both (Section 11) and Race Start (Section 12). Actual portfolio pages, routing, sound, backend work, publishing and deployment remain deferred and require separate approval. Basic mobile usability is implemented; full responsive art direction remains future work.
 
 ## 3. Compact architecture and state
 
@@ -54,7 +53,7 @@ Supporting code consists of one controller hook, pure mathematical helpers, and 
 
 | Element | Responsibility |
 |---|---|
-| `App` | Demonstration shell and last-confirmed feedback |
+| `App` | Composition, confirmation feedback, cinematic scenes and Race Start gate |
 | `SteeringWheelNavigator` | Composition, instructions, previous/next controls, accessible status |
 | `HorizontalSectionTrack` | Labels, counter, underline, horizontal positioning |
 | `SteeringWheel` | Stationary interaction surface, rotating artwork, center button |
@@ -62,7 +61,7 @@ Supporting code consists of one controller hook, pure mathematical helpers, and 
 | `wheelMath` | Angles, limits, nearest section, hit testing, track calculation |
 | `sections` | Ordered section definitions and derived types |
 
-Keep pointer and animation logic in the controller hook. Introduce no additional components, hooks, libraries, or architectural layers unless demonstrated complexity requires them. Avoid state-management libraries, generic interpolation utilities, and premature optimization.
+Keep mechanical pointer/snap logic in the mechanical controller hook. Cinematic state and Race Start remain separately owned as described in Sections 11–12. Introduce no further components, hooks, libraries or architectural layers unless demonstrated complexity requires them. Avoid state-management libraries, generic interpolation utilities, and premature optimization.
 
 ### Public contract
 
@@ -79,7 +78,7 @@ interface SteeringWheelNavigatorProps {
 }
 ```
 
-The demonstration records the confirmed section without changing the URL or rendering destination pages. Controlled selection, persistence, and asynchronous navigation are outside the initial contract.
+The mechanical contract reports explicit confirmation without changing the URL. App now enters non-HOME cinematic placeholders; HOME stays in navigation. Controlled mechanical selection and asynchronous routing remain outside this contract. Race Start expiry is separate from mechanical state.
 
 ### Internal state
 
@@ -162,7 +161,7 @@ Update the previous polar angle even at a limit. Do not accumulate invisible ove
 
 The latest approved revision supersedes the broad circle and earlier perimeter rings. A fixed outer-contour polygon is calibrated from the transparent asset (alpha 128, ignoring openings). Transform pointer coordinates into source-image space using the calibrated hub, scale and displayed rotation. Initiation requires an inside point whose shortest distance to the outer polygon is between 1 and 45 CSS pixels, inclusive. Both insets are configurable and remain fixed in CSS pixels across screen sizes.
 
-Use the same eligibility helper for pointer-down and hover. Pointer capture continues beyond the band. Keep the hub radius `max(44px, 0.22 * stage width) / 2` separate from initiation eligibility: ongoing gestures freeze/rebase only inside that hub. No artwork or keyboard-command changes; no visible border. The compact keyboard focus badge remains. See `docs/VISIBLE_EDGE_BAND.md`; earlier geometry records are historical.
+Use the same eligibility helper for pointer-down and hover. Pointer capture continues beyond the band. Keep the hub radius `max(44px, 0.22 * stage width) / 2` separate from initiation eligibility: ongoing gestures freeze/rebase only inside that hub. No artwork or keyboard-command changes; no visible border. The compact keyboard focus badge remains. See [current mechanical baseline](docs/T7_T8_VALIDATION.md) and [historical contour calibration/checkpoint](docs/VISIBLE_EDGE_BAND.md).
 
 ### Pointer lifecycle
 
@@ -232,9 +231,9 @@ Do not introduce generic interpolation utilities or additional synchronization a
 
 ## 5. Visual and accessibility requirements
 
-### T2 asset-validation gate
+### T2 asset-validation gate — retained acceptance contract
 
-The original neutral HOME wheel from Figma (`5:22` in frame `5:2`) was inspected and retained unchanged. On 2026-10-23 the user supplied and authorized a transparent candidate for the prototype, accepting minor visual differences until final refinement. It was copied from `dist/assets/steering-wheel-neutral-DLpvQqP8.png` to `src/assets/steering-wheel-transparent-candidate.webp` before any build, without overwriting the original.
+The original neutral HOME wheel from Figma (`5:22` in frame `5:2`) was inspected and retained unchanged. On 2026-10-23 the user supplied and authorized a transparent candidate for the prototype, accepting minor visual differences until final refinement. It was copied from `dist/assets/steering-wheel-neutral-DLpvQqP8.png` to `src/assets/steering-wheel-transparent-candidate.png` before any build, without overwriting the original. The runtime subsequently switched to the WebP derivative; [the health audit](docs/APPLICATION_HEALTH_AUDIT.md) records identical decoded alpha and a checksum-only contour metadata correction without recalibration.
 
 Verify:
 
@@ -288,59 +287,22 @@ Preserve the existing badge for the local prototype. Retain the planned system s
 - Announce commitment and confirmation politely, without frame-by-frame announcements.
 - Auxiliary targets are at least 44 × 44 CSS pixels.
 - Artwork is decorative to assistive technology.
-- Reduced motion removes snapping animation while retaining direct manipulation. Do not introduce pulsing animation in this phase.
+- Reduced motion removes snapping animation while retaining direct manipulation. No mechanical label pulse is implemented. The later Race Start button pulse is independently scoped and disabled for reduced motion.
 
-## 6. Files and progressive tooling
+## 6. Implemented files and tooling
 
-All additions remain inside `carfolio`; preserve both existing reference documents.
+- `src/features/wheel-navigation/`: centralized sections, mechanical controller/math, calibrated presentation/contour/hit testing, artwork and navigator components, unit/integration tests.
+- `src/features/cinematic-transition/`: cinematic controller/layer, shared `speedStreaks.ts`, placeholders and controller tests.
+- `src/features/race-start/`: overlay component and component tests; `src/App.tsx` composes the intro gate and cinematic scenes.
+- `src/assets/`: preserved original/candidate PNGs, runtime WebP and stationary SVG atmosphere/shadow/indicator.
+- `vitest.config.ts`, `playwright.config.ts`, `tests/`, `scripts/playwright.mjs`: local unit/integration and browser tooling.
+- `scripts/verify-static.mjs` and `scripts/verify-wheel-band.mjs`: legacy inspection and dedicated contour verifier. The health audit documents a standalone CDP transport failure and an adapter-based successful verification; do not assume every historical command still runs unchanged.
 
-```text
-carfolio/
-├─ AGENTS.md
-├─ PROJECT_CONTEXT.md
-├─ IMPLEMENTATION_PLAN.md
-├─ package.json
-├─ package-lock.json
-├─ .npmrc
-├─ .gitignore
-├─ index.html
-├─ vite.config.ts
-├─ tsconfig*.json
-├─ eslint.config.js
-├─ README.md
-├─ src/
-│  ├─ main.tsx
-│  ├─ App.tsx
-│  ├─ styles.css
-│  ├─ assets/steering-wheel-neutral.png
-│  └─ features/wheel-navigation/
-│     ├─ sections.ts
-│     ├─ wheelMath.ts
-│     ├─ useWheelNavigation.ts
-│     ├─ SteeringWheelNavigator.tsx
-│     ├─ SteeringWheel.tsx
-│     ├─ HorizontalSectionTrack.tsx
-│     └─ __tests__/
-│        ├─ wheelMath.test.ts
-│        └─ SteeringWheelNavigator.test.tsx
-└─ T8 additions:
-   ├─ playwright.config.ts
-   └─ tests/wheel-navigation.spec.ts
-```
+The original tooling sequence was foundation → Vitest mathematics → Testing Library/jsdom → T4 browser smoke → T8 Playwright. Dependencies are local and locked. Future installations require task authorization; no dependency changes are part of documentation maintenance.
 
-This is a proposed implementation structure, not a claim that these files exist.
+Keep caches, temporary files, browser downloads/profiles, builds and reports inside `carfolio`. Bind authorized servers to localhost. Do not manage the development server without explicit authorization; documented commands are not authorization to execute them.
 
-Tooling sequence:
-
-1. Application stack, GSAP core, ESLint, strict TypeScript, React Strict Mode.
-2. Vitest for mathematical tests.
-3. Testing Library and jsdom for interaction integration.
-4. Manual real-browser smoke testing in T4.
-5. Playwright for comprehensive automation in T8.
-
-Use npm and a lockfile, resolving compatible stable releases during authorized setup. Keep caches, temporary files, downloads, and reports inside the project. Bind the development server to localhost. Verify existing runtime compatibility without changing global tooling.
-
-## 7. Implementation tasks and acceptance gates
+## 7. Historical implementation tasks and retained acceptance gates
 
 | Task | Deliverable | Acceptance criteria |
 |---|---|---|
@@ -353,9 +315,9 @@ Use npm and a lockfile, resolving compatible stable releases during authorized s
 | **T7 — Accessibility and mobile baseline** | Semantics, focus, alternatives, reduced motion | All sections are selectable without dragging; keyboard endpoints clamp; focus and native controls work; reduced motion settles immediately; 320 px layout has no horizontal page overflow; scrolling outside the wheel works. |
 | **T8 — Comprehensive validation and handoff** | Cross-browser automation and documentation | Chromium, Firefox, and WebKit checks cover primary interactions; five settled-state screenshots are captured; physical-device checks are recorded where available; required checks pass; README and final report identify all remaining unverified items. |
 
-Execute tasks in order and verify each gate before proceeding with dependent work. At each gate, report changed files, checks actually run, results, unresolved issues, and available local Git status.
+The completed phases followed these gates; retain them as regression acceptance criteria for separately authorized work. At each gate, report changed files, checks actually run, results, unresolved issues, and available local Git status.
 
-T3 was completed independently while the original T2 asset decision was pending. The subsequent explicit T2–T6 authorization supersedes that earlier restriction; T2 was validated before implementing T4 and T5, and T5 was verified before T6. Tests of the circular initiation region concern the independent boundary rather than tracing image alpha.
+T3 was completed independently while the original T2 asset decision was pending. The subsequent explicit T2–T6 authorization supersedes that earlier restriction; T2 was validated before implementing T4 and T5, and T5 was verified before T6. Historical circular-region tests certified that former independent boundary. The current contour band uses the later calibration and hit-testing coverage.
 
 ### T4 smoke-test procedure
 
@@ -368,7 +330,7 @@ Use the local application in an available real browser:
 
 When native cancellation cannot be reproduced reliably, dispatch a cancellation event inside the real browser to verify handler behavior and label that result as synthetic. Record native cancellation or physical touch checks as pending when unavailable.
 
-This smoke test requires no new automation library. Comprehensive browser automation remains in T8.
+This smoke test requires no new automation library. Comprehensive browser automation was subsequently added in T8; this procedure is historical and does not authorize server management.
 
 ## 8. Test strategy and risks
 
@@ -399,14 +361,14 @@ This smoke test requires no new automation library. Comprehensive browser automa
 - Enter handling, Strict Mode, and unmount cleanup.
 - Reduced-motion changes during snapping, resizing, blur, and document hiding.
 
-T8 adds browser coverage, deterministic settled screenshots, responsive checks, and real mouse event behavior. Synthetic touch testing does not substitute for physical-device validation. Review keyboard-only use, screen-reader feedback, Android touch, and iOS Safari where available; report unavailable checks as pending.
+T8 added browser coverage, deterministic settled screenshots, responsive checks and real mouse event behavior; results remain specific to that checkpoint. Synthetic touch testing does not substitute for physical-device validation. Review keyboard-only use, screen-reader feedback, Android touch, and iOS Safari where available; report unavailable checks as pending.
 
 ### Main risks
 
 | Risk | Mitigation |
 |---|---|
 | Approved asset unsuitable for rotation | Mandatory T2 gate; report before proceeding; no unauthorized alteration |
-| Empty areas accept dragging | Calibrated rim annulus |
+| Empty areas accept dragging | Calibrated 1–45px contour band; hub excluded |
 | Confirmation reads stale state | Synchronous committed-selection value and one confirmation transaction |
 | Duplicate callbacks | Event-handler-only confirmation and single activation path |
 | Wheel and track diverge | One angle and the approved direct track equation |
@@ -427,13 +389,13 @@ T8 adds browser coverage, deterministic settled screenshots, responsive checks, 
 - Do not claim that a feature is implemented or tested without evidence.
 - This document records the implementation plan; it does not itself authorize implementation.
 
-## 10. Progress record
+## 10. Historical mechanics progress — 2026-10-23
 
 | Task | Status | Verification evidence |
 |---|---|---|
 | T1 | Complete | Type check, lint, production build and Chrome foundation mount passed; project-local cache/temp configuration recorded in `docs/T2_ASSET_VALIDATION.md` |
 | T2 | Complete — prototype gate passed | Candidate preserved; transparency, appearance, resolution, hub stability and independent 7px circle checked. `docs/static-verification.json` and `docs/T2_ASSET_VALIDATION.md` contain evidence. |
-| T3 | Complete | Original 86 mathematical tests continue to pass; section-angle configuration remains unchanged. |
+| T3 | Complete | 86 original mathematical cases passed at that checkpoint; see the consolidated pure-math record in [T2–T6 evidence](docs/T2_T6_IMPLEMENTATION.md). |
 | T4 | Finished | Integration tests and real Chrome mouse capture/outside release/direction/cancellation checks passed. Protocol touch checked; physical-device verification remains pending. |
 | T5 | Finished | Single 240ms GSAP snap, interruption/stale-callback tests, reduced-motion behavior and all five Chrome settled positions passed; track-center error 0 CSS pixels in the final run. |
 | T6 | Finished | Keyboard, native buttons, explicit confirmation during settling, repetition and active-gesture rejection tested. No automatic navigation; URL unchanged. See `docs/T2_T6_IMPLEMENTATION.md`. |
@@ -442,15 +404,13 @@ T8 adds browser coverage, deterministic settled screenshots, responsive checks, 
 
 T4, T5 and T6 remain Finished. The user approved a 1-45 CSS-pixel drag band. Its three outdated test cases were corrected before T7/T8; the unchanged band is included in the current validation. Prior reports remain historical evidence. T7/T8 address endpoint focus and desktop control overlap without changing the steering mechanics.
 
-T1–T6 are complete under the user's explicit authorization. The original and candidate assets remain intact, all work is local, and final visual refinement is deferred. T7/T8 automated validation and remaining manual physical-device/screen-reader checks are recorded in docs/T7_T8_VALIDATION.md. No routes, destination pages or cinematic transitions were added.
+T1–T6 are complete under the user's explicit authorization. The original and candidate assets remain intact, all work is local, and final visual refinement is deferred. T7/T8 automated validation and remaining manual physical-device/screen-reader checks are recorded in docs/T7_T8_VALIDATION.md. No routes, destination pages or cinematic transitions were added during T1–T8. Cinematic placeholders were implemented afterward (Section 11).
 
-## Targeted pointer corrections ? 2026-10-23
+The intermediate pointer and broad-interior revisions are preserved in [consolidated historical evidence](docs/T2_T6_IMPLEMENTATION.md#consolidated-historical-records). Their former circle/ring geometries are superseded. The desktop control overlap and endpoint focus findings were subsequently resolved and verified in T7/T8; physical-device and screen-reader checks remain pending.
 
-The user authorized only expanding the invisible boundary to 1px plus 5px tolerance per side and suppressing pointer-induced wheel focus circles while retaining keyboard focus. See `docs/POINTER_CORRECTIONS.md`. Earlier 7px measurements remain historical evidence. The desktop circle/control overlap and endpoint auxiliary-button focus loss remain known, unresolved audit findings; this correction does not mark them fixed.
+## 11. Implemented cinematic placeholder prototype
 
-## 11. Approved cinematic prototype — current phase
-
-The user approved the cinematic architecture and sequential implementation in this conversation. This section supersedes the earlier cinematic scope exclusions for the placeholder prototype only. Preserve historical T1–T8 records; current mechanics are the contour-based 1–45 CSS-pixel baseline at commit `d945e4a`, not the older circle/ring reports above.
+The user separately approved the cinematic architecture and sequential implementation after the mechanical baseline. This section supersedes the earlier cinematic scope exclusions for the placeholder prototype only. Preserve historical T1–T8 records; the mechanical behavior derives from the contour-based 1–45 CSS-pixel baseline at `d945e4a`. Later WebP checksum metadata and shared-streak changes are recorded in the health audit and Race Start documents; older circle/ring reports are historical.
 
 Baseline revalidated before implementation: 127 unit/integration tests, lint, TypeScript and production build passed; Chromium 15 and WebKit 14 browser checks passed, Firefox 14 passed on a browser-permission retry, with two expected Chromium-only touch skips overall. The contour verifier passed 7,244 assertions with no external-control interceptions. Artwork hashes match. T7's defined baseline and T8 automation/handoff are complete; physical Android/iOS, native Safari and screen-reader checks remain pending. No new mechanical work is authorized by this phase.
 
@@ -469,15 +429,45 @@ Baseline revalidated before implementation: 127 unit/integration tests, lint, Ty
 
 | Task | Status | Gate |
 |---|---|---|
-| C1 — Baseline and approved phase | Complete | `cinematic-feature` is clean at `d945e4a`; approved contour geometry and prior baseline checks confirmed. |
+| C1 — Baseline and approved phase | Complete — historical checkpoint | `cinematic-feature` was clean at `d945e4a` before implementation; approved contour geometry and prior baseline checks were confirmed. |
 | C2 — State and placeholder contract | Complete | 130 tests, TypeScript and lint passed. HOME and synchronous request guards verified independently of mechanics. |
 | C3 — Shared artwork and continuous handoff | Complete — automated gate | Desktop/mobile checks passed across all four destinations in Chromium, Firefox and WebKit: image/shadow handoff within 0.25px, one visible wheel per sampled frame, exact returned stage geometry and maximum 1/255 channel rasterization difference. Screenshots inspected. |
 | C4 — Cinematic choreography | Complete — automated gate | All three engines passed timed entry/return, fixed rotation, streak appearance/cleanup and heading-focus checks. |
 | C5 — Accessibility and lifecycle | Complete — automated gate | All three engines passed HOME/duplicate guards, reduced motion, focus/scroll restoration, Escape, resize, motion-preference changes and synthetic hiding. Lifecycle checks interrupt both entry and restoration. |
 | C6 — Regression and manual-review handoff | Ready for manual visual review | 130 unit/integration tests, type checking, lint and production build passed. Initial full sweep passed 43 mechanical browser cases (2 capability skips); two cinematic issues were corrected, then all 39 affected cross-browser checks passed. Current-build band verifier passed 7,244 assertions with zero external-control interceptions. User aesthetic approval and actual-device fluidity review remain pending. |
 
-Implementation progress and actual checks will be recorded below as each gate passes. No phase is considered aesthetically complete before the user's manual visual review.
+The recorded gates describe the cinematic checkpoint; they are not fresh checks of the current Race Start working tree. No phase is considered aesthetically complete before the user's manual visual review.
 
 C3 diagnostics: initial byte-exact screenshot comparison detected a maximum 1/255 channel difference over 1,325 pixels after a compositing round trip, with mean absolute channel difference 0.0018/255 and identical geometry. The gate now explicitly permits only that rasterization tolerance and samples visibility on every animation frame. Mobile selection in the verifier uses keyboard controls because inactive track labels are intentionally clipped. No mechanical changes were made to resolve these test-harness findings.
 
 Final implementation evidence and manual review checklist: `docs/CINEMATIC_PROTOTYPE.md`. The first full run found a Firefox carrier-style cleanup issue and WebKit pointer-invoker focus difference. Both were fixed outside the wheel mechanics and verified by the final 39-case targeted rerun. Headless frame-time samples are recorded explicitly; they do not establish steady 60fps or physical-device performance. No branch changes, commits, dependency installations, remote writes or development-server management occurred. The cinematic phase remains pending user visual review rather than being declared aesthetically complete.
+
+
+## 12. Implemented Race Start and latest available verification — 2026-10-26
+
+Race Start is implemented in the local working tree. [The feature contract](docs/RACE_START_IMPLEMENTATION_PLAN.md) retains the final requirements; [timing and validation evidence](docs/RACE_START_TIMING.md) describes the implemented 600ms START entrance and measured behavior. Existing user-owned changes remain uncommitted on `loading-section`; historical branch/status snapshots elsewhere apply only to their dated tasks.
+
+Implemented decisions:
+
+- One `RaceStartOverlay` owns four cleaned-up light timers (0/1/2/3s), explicit native START, synchronous duplicate guard and scoped animation/fallback. Fifth light illuminates only on accepted activation.
+- App keeps HOME and the sole wheel controller mounted behind an inert intro gate. Completion/failure releases HOME at index 2 / 0° and restores focus without confirming a section or changing the URL.
+- Store `gt3-race-start-expires-at` at activation for 900,000ms. Finite future expiry bypasses the intro; bypass does not extend expiry. Storage errors permit entry without persistence.
+- Share only six decorative streak positions and three tweens through `speedStreaks.ts`. Normal section entry/restoration retains its separate controller and timing. Startup uses an approximately 1.5s timeline with an overlapping 250ms overlay fade; reduced motion uses 150ms and no pulse.
+- START fades in for 600ms then pulses; it remains enabled during entrance. Resource readiness, pre-React recovery and image-error retry were not adopted. The older health-audit startup proposal is superseded by the final feature contract.
+
+| Evidence scope | Recorded result | Interpretation |
+|---|---|---|
+| T7/T8, 2026-10-23 | 127 tests; 43 browser passes, 2 capability skips; 7,244 contour assertions | Historical mechanics baseline; not current Race Start validation. |
+| Cinematic checkpoint | 130 tests; final targeted 39 browser passes after two fixes | Placeholder cinematic automation; user aesthetic review remains pending. |
+| Health audit, 2026-10-25 | 130 tests; 70 browser passes and 2 skips across completed executions; 7,244 contour assertions via temporary adapter | Historical pre-Race Start health/performance evidence, including WebP alpha equivalence. |
+| Latest Race Start report, 2026-10-26 | 149 tests; TypeScript, zero-warning lint and production build passed; 35 Race Start/cinematic browser passes and 1 capability skip in Chromium/WebKit | Latest available results, not rerun by this documentation task and not a full current cross-browser mechanical sweep. |
+| Latest Firefox attempt | 18 failures at `browserContext.newPage: Target crashed`, before application load | Current Firefox application behavior unverified; historical successful runs do not close this gap. |
+| Documentation cleanup | Complete-record consolidation, local link/anchor/reference and preservation checks | Documentation checks only; no application verification or aesthetic approval claimed. |
+
+## 13. Pending validation, limitations and future approval
+
+Pending manual validation: physical Android/iOS drag/capture/cancellation, native Safari, NVDA/VoiceOver, actual-device cinematic/startup fluidity, and final cinematic aesthetic review. The current Firefox startup failure also leaves a browser verification gap. Protocol touch, synthetic cancellation/hiding and Windows WebKit do not establish physical-device results.
+
+Known limitations: no resource-readiness gate, explicit image-error recovery or pre-JavaScript failure UI; the intro can finish before very slow artwork delivery. Local timing is not hosted performance. Short-cycle heap observations do not settle long-session leak attribution. Standalone CDP transport reliability and an external dependency vulnerability audit remain unresolved; no upgrades or security-audit result are claimed. Generated `.tmp` reports can be overwritten by later runs, so checkpoint reports must retain their scope and limitations.
+
+Future work requires separate approval: implementation of reviewed Engineering Dossier internal designs (ABOUT layout still under review), real portfolio content/contact destinations, routing, sound, final artwork/badge/font treatment, full responsive art direction, resource/performance/recovery changes, publishing or deployment. Preserve HOME, approved mapping, mechanics and existing cinematic transitions during unrelated tasks. Do not infer implementation authorization from design discussions.

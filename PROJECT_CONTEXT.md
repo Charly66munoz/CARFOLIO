@@ -40,7 +40,7 @@ Five visual screens represent the five steering-wheel positions:
 | PROJECTS | +18° | Right |
 | STACK | +36° | Far right |
 
-These Figma frames are **static visual states**. The local prototype now implements dragging, snapping, keyboard selection and explicit confirmation (T1–T6, 2026-10-23). Actual section navigation is still deferred.
+These Figma frames are **static visual states**. The local prototype now implements dragging, snapping, keyboard selection and explicit confirmation (T1–T6, 2026-10-23). Cinematic entry into four placeholders is implemented; real portfolio section content and routing remain deferred.
 
 Text, layouts, and backgrounds are editable in Figma. The detailed steering wheel is a generated raster visual asset based on our reference—not a true 3D model or an assembly of independently editable mechanical parts.
 
@@ -112,7 +112,7 @@ This allows the wheel to turn naturally **both left and right** from its initial
 
 ### HOME is the initial state
 
-On page load:
+The mounted HOME navigation initializes as follows (Race Start may temporarily cover it; see Section 16):
 
 - HOME is selected.
 - Steering-wheel rotation is 0°.
@@ -159,7 +159,7 @@ The Figma design has been corrected and now matches the approved rotation conven
 
 **CSS/browser convention:** In ordinary screen coordinates, `transform: rotate(angleDeg)` rotates clockwise for positive values and counterclockwise for negative values. Preserve this mapping in Pointer Events math, snapping, and synchronization with the horizontal track.
 
-Angle magnitudes are current design reference values and may be fine-tuned during interaction testing; **the direction and section order must not change**.
+These five angles are the approved implemented configuration. Any tuning requires explicit authorization; **the direction and section order must not change**.
 
 ## 6. Landing composition
 
@@ -215,9 +215,9 @@ DESIGNED TO MOVE.
 
 Links: GitHub, LinkedIn, and email.
 
-## 7. Previously agreed mechanics — Not yet implemented
+## 7. Implemented steering mechanics
 
-This is the part we will implement next.
+The following contracts are implemented. Historical verification and outstanding manual checks are separated in [the implementation plan](IMPLEMENTATION_PLAN.md). The calibrated initiation band is 1–45 CSS pixels inside the outer contour, with the confirmation hub excluded.
 
 ### Drag interaction
 
@@ -249,13 +249,13 @@ This is a fundamental UX rule.
 
 A second, explicit action is required to confirm entry.
 
-Possible confirmation inputs:
+Implemented confirmation inputs:
 
 - Click the active section label.
 - Click the wheel center.
-- Press Enter.
+- Press Enter or activate the explicit ENTER control.
 
-The selected label may pulse very subtly in brightness to indicate that it can be confirmed.
+An inactive label selects first and confirms only on a later activation. The original idea of a subtle label pulse is optional and unimplemented; adding it requires approval.
 
 ### Accessibility
 
@@ -273,7 +273,7 @@ Confirming a section should not result in an abrupt page change.
 
 We previously agreed on a cinematic transition inspired by automotive acceleration.
 
-### Planned sequence
+### Implemented placeholder sequence
 
 1. The user confirms the selected section.
 2. A brief feeling of acceleration begins.
@@ -285,7 +285,7 @@ We previously agreed on a cinematic transition inspired by automotive accelerati
 
 The transition must remain elegant and fluid—not crowded with effects.
 
-We discussed a tentative duration of about **1.8 seconds**, adjustable during implementation.
+The prototype uses approximately **1.8 seconds** for entry and **1.2 seconds** for restoration; reduced motion uses a **150 ms fade**. Aesthetic sign-off and actual-device fluidity remain pending.
 
 ### Transition style
 
@@ -313,7 +313,7 @@ The small wheel is the persistent entry point back to navigation.
 
 Expansion and contraction should feel like parts of one continuous physical experience, not unrelated UI effects.
 
-On mobile, this control should adapt to a small corner button.
+The implemented control is 72px at desktop right-center and 56px at mobile bottom-right, with safe-area spacing.
 
 ## 10. Optional sound
 
@@ -325,9 +325,9 @@ We also discussed subtle mechanical sounds inspired by sports-car controls, such
 
 **Audio must be disabled by default**, with voluntary opt-in.
 
-Audio is not a priority for the first prototype.
+Audio remains unimplemented and requires separate approval.
 
-## 11. Planned implementation — Approved technology stack
+## 11. Implemented technology stack and architectural constraints
 
 **Updated decision: use React + Vite + TypeScript, NOT Next.js.** The portfolio is primarily an interactive frontend, and we do not currently need server-side rendering, our own API, or a backend.
 
@@ -347,7 +347,7 @@ Avoid Three.js unless it is demonstrably necessary.
 
 Separate the wheel's mechanical state and drag calculations from visual presentation and from section navigation.
 
-Potential component structure:
+Implemented mechanical component structure:
 
 - `SteeringWheelNavigator`
 - `SteeringWheel`
@@ -356,76 +356,28 @@ Potential component structure:
 
 Centralize section definitions and valid angles in one configuration instead of scattering values across the codebase.
 
-## 12. Current implementation status
+## 12. Implementation status and evidence — 2026-10-26
 
-**Local prototype update — 2026-10-23:** T1–T6 are implemented and verified as recorded in `IMPLEMENTATION_PLAN.md` and `docs/T2_T6_IMPLEMENTATION.md`. The user authorized the supplied transparent candidate and temporary minor visual differences. The original asset remains intact. The prototype uses a calibrated fixed hub and an invisible band 1 to 45 CSS pixels inside the calibrated visible outer contour; the central confirmation hub remains excluded. Pointer dragging, snapping, synchronized track, keyboard controls and explicit confirmation are functional. Real routes and full portfolio pages remain deferred. The separately approved cinematic placeholder prototype is now ready for manual visual review; see Section 15. The historical Figma/initial-planning inventory below is retained for context.
+Implemented locally:
 
-**Already designed in Figma:**
+- T1–T8 mechanics and accessibility/mobile baseline: calibrated fixed hub, 1–45 CSS-pixel contour band, capture/cancellation, snapping, synchronized track, keyboard alternatives and explicit confirmation.
+- Cinematic entry/return, floating restore control, Escape reversal and reduced motion. HOME remains navigation; ABOUT, CONTACT, PROJECTS and STACK render placeholders only.
+- Race Start introduction, explicit START, shared decorative streaks, guarded handoff to unchanged HOME and 15-minute localStorage expiry.
+- Runtime artwork: transparent 1254 × 1254 WebP. Both earlier PNGs are preserved; the health audit records pixel-identical alpha and the contour checksum correction without recalibration.
 
-- Desktop Landing layout.
-- Visual identity and color palette.
-- Background depth and subdued lighting.
-- GT3-style steering-wheel visual with red stripe.
-- Horizontal track with HOME in the center.
-- Five visual states for the navigation categories.
-- Corrected visual states with the wheel turned both left and right, consistent with the definitive mechanical mapping in Section 5: clockwise selects PROJECTS and STACK; counterclockwise selects CONTACT and ABOUT.
-- Typography hierarchy.
-- Interaction hints.
-- Footer and secondary elements.
+Evidence is checkpoint-specific. [T7/T8](docs/T7_T8_VALIDATION.md) records 127 unit/integration tests, 43 browser passes, two capability skips and 7,244 band assertions. [Cinematic evidence](docs/CINEMATIC_PROTOTYPE.md) records 130 tests and a final targeted 39-case cross-browser rerun after two fixes. [The health audit](docs/APPLICATION_HEALTH_AUDIT.md) later records 70 browser passes and two skips across completed executions. These are historical results, not a fresh run against today's working tree.
 
-**Initially unimplemented at planning time (superseded for T1–T6 by the update above):**
+The latest available [Race Start report](docs/RACE_START_TIMING.md), dated 2026-10-26, records 149 tests, passing TypeScript/lint/build, and 35 Race Start/cinematic browser passes with one capability skip in Chromium/WebKit. Firefox failed before application load; current Firefox application behavior remains unverified. This documentation cleanup performs no application test rerun.
 
-- Real mouse/touch rotation.
-- Functional snapping.
-- Animated horizontal-track movement.
-- Reactive selection state.
-- Click/keyboard confirmation.
-- Cinematic transitions.
-- Wheel minimization/restoration.
-- Mechanical sound.
-- Final responsive adaptation.
-- Real portfolio section content.
+Physical Android/iOS input, native Safari, NVDA/VoiceOver, actual-device fluidity and final cinematic aesthetic approval remain pending. Real content, contact destinations, full routing, sound, final badge/font/artwork refinement, complete responsive art direction and deployment remain future work requiring approval.
 
-Figma frames are **visual reference material**, not an already-working mechanical prototype.
+**Approved counters:** ABOUT `01 / 05`, CONTACT `02 / 05`, HOME `03 / 05`, PROJECTS `04 / 05`, STACK `05 / 05`. Figma frames remain static references, not evidence of running behavior.
 
-**Approved index numbering:** Counters follow the left-to-right order: ABOUT = `01 / 05`, CONTACT = `02 / 05`, HOME = `03 / 05`, PROJECTS = `04 / 05`, STACK = `05 / 05`. Normalize older index labels in the Figma reference during implementation without changing the approved visual or mechanical order.
+## 13. Current design exploration — internal sections
 
-## 13. Next phase — Isolated mechanical prototype
+**HOME remains unchanged unless explicitly requested.** The approved **Engineering Dossier** visual direction applies only to internal portfolio sections. The specific ABOUT layout remains under design review and has not been implemented; the current ABOUT screen is a placeholder.
 
-Create an independent **React + Vite + TypeScript + Tailwind CSS** project to implement and validate steering-wheel navigation only. Use **GSAP** when it adds value for snapping/animations and **Pointer Events** for dragging.
-
-Do not build the five actual portfolio sections, add a backend, or introduce full application routing yet. Initial confirmation may simply call `onConfirm(section)` without navigation.
-
-### Immediate acceptance goals
-
-The steering wheel must:
-
-1. Start at HOME, at 0°.
-2. Rotate in either direction.
-3. Respect the -36° to +36° limits, with **positive/clockwise rotation selecting PROJECTS, then STACK**, and **negative/counterclockwise rotation selecting CONTACT, then ABOUT**.
-4. Correctly select all five sections.
-5. Snap precisely to a valid angle.
-6. Synchronize the horizontal navigation track.
-7. Require explicit confirmation rather than navigating on selection.
-8. Support mouse, touch, and keyboard input.
-
-Use the existing Figma layouts as design references without arbitrarily redesigning the established visual identity.
-
-Make the mechanical module reusable in the future full portfolio.
-
-### Work approach
-
-First validate that the interaction is natural, polished, and stable.
-
-Later phases will add:
-
-- Cinematic transitions.
-- Floating/minimized wheel.
-- Actual navigation between sections.
-- Responsive design.
-- Final portfolio content.
-
-**The immediate priority is a precise, polished steering-wheel interaction that matches the quality of its visual design.**
+Do not infer detailed layout approval from the direction alone. Design discussions do not authorize code changes. Preserve the approved mechanics, existing cinematic transitions, HOME composition and five-section mapping during unrelated work. Implementation of reviewed section designs, real content or routing requires a separate explicit request.
 
 ## 14. Mandatory operational restrictions for Codex
 
@@ -442,12 +394,12 @@ Codex must follow the constraints below throughout implementation, including ini
 
 ### Git and publishing
 
-- **Codex may initialize a local Git repository** in the project root with `git init` if needed, and maintain a local development history.
+- **Local Git initialization and commits require an explicitly approved workflow.** Keep existing user changes intact. Do not change branches or create commits during documentation maintenance.
 - Create a suitable `.gitignore` for React/Vite/TypeScript (such as excluding `node_modules`, `dist`, secret-bearing `.env` files, package-manager caches, and temporary files).
 - **Never execute `git push` without new, explicit authorization from the user.**
 - Do not automatically publish, deploy, upload, or synchronize source code to GitHub, GitLab, Bitbucket, Vercel, Netlify, or any other external service.
 - Do not create remote repositories or configure `git remote` on your own initiative. Do not run commands that mutate remote repositories.
-- After completing the first mechanical phase, **leave the project fully local** for user review. The user alone decides when to create/connect a remote repository and perform the first push.
+- **Leave the project fully local** for user review. The user alone decides when to create/connect a remote repository and perform the first push.
 
 ### Working style
 
@@ -457,18 +409,20 @@ Codex must follow the constraints below throughout implementation, including ini
 
 These rules take priority over generic suggestions to automate project initialization, publication, or deployment.
 
----
+## 15. Implemented cinematic architecture
 
-**Instruction for the next conversation:** Treat this document as the approved visual and functional project context. From here onward, focus on designing and implementing the **isolated steering-wheel mechanics**. Preserve the decisions above and **do not start building the rest of the portfolio yet**.
+The separately approved placeholder prototype extends the original isolated mechanics scope. `useWheelNavigation` remains the single mounted mechanical controller. `useCinematicTransition` owns navigation → entering → section → restoring → navigation independently of page content; destination is captured once and duplicate requests are rejected.
 
-Current interaction revision: the broad circle is superseded by an invisible band 1 to 45 CSS pixels inside the visible outer contour. The contour follows the unchanged artwork scale, calibrated hub and rotation. Keyboard focus retains the compact badge. See docs/VISIBLE_EDGE_BAND.md.
+Shared decorative artwork uses identical calibration. The navigator is inert during travel and section viewing; the visual carrier has no mechanical controls. Restore preserves the prior angle/selection, navigation scroll and focus. Boundary measurements and transform/opacity animation avoid per-frame React updates. Resize, hiding and reduced-motion changes settle the requested endpoint; owned animations/listeners/styles are cleaned up.
 
-**T7/T8 update — 2026-10-23:** The user authorized both phases after approving the 45px band. The accessibility/mobile baseline and automated cross-browser handoff are complete: 127 unit/integration tests, 43 browser tests and 7,244 dedicated Chrome band assertions passed. Two Chromium-only protocol-touch cases are intentionally skipped in Firefox/WebKit. Endpoint focus and desktop control overlap are resolved. Physical-device and screen-reader checks remain pending. See [current verification report](docs/T7_T8_VALIDATION.md); prior geometry reports are historical.
+See [the implementation plan](IMPLEMENTATION_PLAN.md#11-implemented-cinematic-placeholder-prototype) and [cinematic evidence and manual checklist](docs/CINEMATIC_PROTOTYPE.md). Historical preservation claims apply to their checkpoint; subsequent WebP metadata and shared-streak changes are recorded separately, without authorizing changes to mechanical behavior.
 
-## 15. Current phase — Cinematic placeholder prototype
+## 16. Implemented Race Start introduction
 
-The user separately approved and authorized the cinematic architecture and incremental implementation after the mechanics baseline was verified on `cinematic-feature` at `d945e4a`. This supersedes the earlier isolated-phase exclusions only for the local cinematic placeholder prototype.
+Four columns illuminate at scheduled 0/1/2/3-second steps. START appears with the fourth, fades in over 600ms and then pulses; the fifth waits for explicit activation. START disables immediately, stores a 15-minute expiry and runs an approximately 1.5-second decorative acceleration, including an overlapping 250ms overlay fade. Reduced motion preserves the light cadence and explicit START, removes the pulse and uses a 150ms fade.
 
-The prototype now implements approximately 1.8s entry, restrained abstract streaks/decorative blur, a shrinking wheel and floating restore control, approximately 1.2s reversal, Escape cancellation, and a reduced-motion fade. HOME stays in main navigation; the other four destinations show placeholder content only. The existing mechanical controller, calibrated 1–45px contour band, mapping, snapping and artwork are unchanged. Cinematic state and page content remain independent.
+HOME and its single controller stay mounted behind an inert gate. Completion or the animation-failure fallback releases HOME at index 2 / 0° and hands focus to its active label, without confirming a section or changing the URL. Valid expiry skips the introduction without extending it; storage errors do not block access.
 
-Implementation stages and actual checks are recorded in `IMPLEMENTATION_PLAN.md` Section 11 and `docs/CINEMATIC_PROTOTYPE.md`. The prototype is ready for manual visual review, not final aesthetic sign-off. Actual-device fluidity, native Safari and screen-reader checks remain pending. Full portfolio pages, routing, sound and deployment remain deferred. No Git branch change, commit, dependency installation, remote write or development-server management occurred during this phase.
+Race Start reuses only streak configuration/tweens through `speedStreaks.ts`; it does not call cinematic section entry. It is a presentation sequence, not a resource-readiness gate. Missing-artwork and missing-JavaScript recovery remain limitations; no pre-React shell or resource framework was adopted.
+
+[Race Start contract](docs/RACE_START_IMPLEMENTATION_PLAN.md) and [latest timing/validation](docs/RACE_START_TIMING.md) distinguish implementation from incomplete browser/device verification. Timings are local observations, not hosted performance guarantees. Further timing/design changes require approval.

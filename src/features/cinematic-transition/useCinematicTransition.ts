@@ -1,5 +1,6 @@
 import { useCallback, useLayoutEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
+import { addSpeedStreaks } from './speedStreaks'
 import type { SyntheticEvent } from 'react'
 import type { SectionId } from '../wheel-navigation/sections'
 
@@ -112,10 +113,7 @@ export function useCinematicTransition() {
       }
       const streaks = streaksRef.current?.children
       if (streaks && !reduced) {
-        motion.fromTo(streaks, { autoAlpha: 0, x: 0, scaleX: 0.4, filter: 'blur(0px)' },
-          { autoAlpha: 0.32, duration: 0.3, stagger: 0.02, ease: 'power1.in' }, 0.12)
-          .to(streaks, { x: (index: number) => index % 2 ? 280 : -260, scaleX: 1.9, filter: 'blur(1.2px)', duration: 0.65, stagger: 0.02, ease: 'power2.in' }, 0.22)
-          .to(streaks, { autoAlpha: 0, duration: 0.45, stagger: 0.02, ease: 'power2.out' }, 0.95)
+        addSpeedStreaks(motion, streaks)
       }
       timeline.current = motion
       if (state.phase === 'restoring') motion.progress(1, true).timeScale(reduced ? 1 : 1.5).reverse()

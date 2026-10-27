@@ -1,5 +1,9 @@
 import { test, expect } from '@playwright/test'
 
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('gt3-race-start-expires-at', String(Date.now() + 900000)))
+})
+
 test('C6 performance: collect frame timing during real GSAP entry', async ({ page }, info) => {
   await page.goto('/')
   await page.getByRole('slider').press('ArrowRight')

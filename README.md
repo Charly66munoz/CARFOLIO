@@ -1,21 +1,25 @@
 # Carfolio
 
-## Cinematic prototype — current phase
+Local interactive portfolio prototype for Agustín López, using React, Vite, strict TypeScript, Tailwind CSS, native Pointer Events and GSAP.
 
-The approved cinematic prototype is ready for manual visual review on top of `d945e4a`. Confirm ABOUT, CONTACT, PROJECTS or STACK to enter placeholder content; HOME remains the main navigation scene. Use the floating wheel to return, or Escape to reverse an in-progress entry. Reduced motion uses a short fade. The mechanical controller, 1–45px contour band, mapping and artwork remain unchanged.
+## Implemented functionality and design scope
 
-See [cinematic implementation and review](docs/CINEMATIC_PROTOTYPE.md) and section 11 of `IMPLEMENTATION_PLAN.md` for current progress. The earlier delivery notes below describe the mechanics baseline. Physical-device, native Safari and screen-reader checks remain pending. Do not interpret their pending status as incomplete T7/T8 automated delivery.
+- Steering navigation: ABOUT −36°, CONTACT −18°, HOME 0°, PROJECTS +18°, STACK +36°. Positive rotation is clockwise; endpoints clamp. Selecting never automatically confirms.
+- Calibrated 1–45 CSS-pixel contour band, captured dragging, cancellation, one GSAP snap, synchronized track, keyboard/native-button alternatives and explicit confirmation.
+- Cinematic entry into four placeholder sections and floating-wheel restoration; HOME remains navigation. Escape reverses entry; reduced motion uses a short fade.
+- Race Start introduction: 0/1/2/3s lights, explicit START/fifth light, 600ms button entrance, shared streak reveal and 15-minute expiry. HOME stays mounted behind the intro gate; START does not confirm a section.
 
-Local steering-wheel portfolio prototype for Agustín López. React, Vite, strict TypeScript, Tailwind CSS and GSAP core. The approved design and mechanical contracts are in `PROJECT_CONTEXT.md` and `IMPLEMENTATION_PLAN.md`.
+**HOME remains unchanged unless explicitly requested.** Engineering Dossier is the approved visual direction for internal sections only. The specific ABOUT layout is under design review and has not been implemented; ABOUT currently renders a placeholder. Design discussions do not authorize implementation. Real content/contact destinations, full routing, sound, final artwork/font treatment, full responsive art direction and publishing require separate approval.
 
-## Current delivery
+## Verification status
 
-- **T1 complete:** application foundation, local tooling, pinned dependencies and lockfile.
-- **T2 complete:** authorized transparent candidate, preserved original and fixed hub. The current initiation region follows the outer contour at depths 1–45 CSS pixels. See [asset validation](docs/T2_ASSET_VALIDATION.md).
-- **T3 complete:** independent mathematical helpers and 86 passing Vitest tests. See [T3 verification](docs/T3_VERIFICATION.md). Section angles, limits and step size derive from one configuration. Mathematical hit testing does not certify artwork calibration.
-- **T4–T6 finished:** native mouse/touch Pointer Events, capture, cancellation, a single GSAP snap, synchronized horizontal track, keyboard controls and explicit confirmation. See [historical implementation report](docs/T2_T6_IMPLEMENTATION.md).
-- **T7 implemented:** navigation semantics, configuration-derived help, retained endpoint-button focus, keyboard alternatives, reduced motion, mobile scrolling and confirmation controls separated from the wheel surface.
-- **T8 automated validation complete:** 43 browser tests passed, with 2 intentional Chromium-only capability skips. See [current verification and remaining manual checks](docs/T7_T8_VALIDATION.md) for actual results. Physical-device and screen-reader checks remain pending. Contact labels remain reference text; no destination pages or routes exist.
+The latest available [Race Start timing/validation report](docs/RACE_START_TIMING.md), dated 2026-10-26, records 149 unit/integration passes, passing TypeScript/lint/build, and 35 Race Start/cinematic browser passes with one capability skip in Chromium/WebKit. Firefox failed before application load; current Firefox behavior remains unverified. These are existing reported results, not tests rerun during this documentation cleanup or a full current mechanical browser sweep.
+
+Historical evidence remains separate: [T1–T6 and consolidated records](docs/T2_T6_IMPLEMENTATION.md), [asset validation](docs/T2_ASSET_VALIDATION.md), [T7/T8](docs/T7_T8_VALIDATION.md) (127 tests, 43 browser passes, two skips), [cinematic implementation/review](docs/CINEMATIC_PROTOTYPE.md) (130 tests and final targeted 39 browser passes), and [health audit](docs/APPLICATION_HEALTH_AUDIT.md) (70 browser passes and two skips across completed pre-Race Start executions). Historical circle/ring geometries and branch/status snapshots are not current contracts.
+
+Physical Android/iOS, native Safari, NVDA/VoiceOver, actual-device fluidity and final cinematic aesthetic review remain pending. Missing-artwork/JavaScript recovery, long-session heap attribution and standalone CDP verifier transport reliability remain limitations. No external dependency vulnerability-audit result is claimed.
+
+Operational rules are in [AGENTS.md](AGENTS.md), product requirements in [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md), and contracts/progress/future gates in [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md). The [Race Start contract](docs/RACE_START_IMPLEMENTATION_PLAN.md) preserves its final requirements and incomplete validation status.
 
 Drag within the invisible band 1 to 45 CSS pixels inside the visible wheel rim. The band follows the artwork as it rotates; the central hub remains reserved for confirmation. Use Left/Right (also Down/Up), previous/next buttons or section labels as alternatives. Home key selects ABOUT; End selects STACK. Enter, the wheel center, the active label or the ENTER button confirms. An inactive label selects on the first activation and confirms on a later activation. The current prototype transitions to placeholder content after confirmation; HOME stays in navigation.
 
@@ -25,7 +29,7 @@ The approved 1–45px band, section mapping, artwork and steering mechanics are 
 
 ## Run locally
 
-Verified with Node 22.19.0 and npm 10.9.3 on Windows. Use `npm.cmd` in PowerShell where script execution policy blocks `npm.ps1`.
+Historical tooling baseline: Node 22.19.0 and npm 10.9.3 on Windows. Commands below are for authorized local development; they do not authorize an agent to install dependencies or manage servers during documentation work. Use `npm.cmd` in PowerShell where script execution policy blocks `npm.ps1`.
 
 ```powershell
 cd C:\Users\agust\Desktop\Proyectos\Codex\carfolio
@@ -65,24 +69,22 @@ node scripts/verify-static.mjs
 node scripts/verify-static.mjs --interactions
 ```
 
-The first command checks assets, layout, hub projection across all five angles and 1×/2× display density. `--pointer` runs the T4/T5 browser smoke checks; `--interactions` includes T6 native keyboard/button checks. These legacy tools use installed Chrome or Edge with a project-local profile and produce evidence in `docs`. Playwright is the current T8 automation. Protocol-generated touch does not replace physical-device testing. Restricted agent environments may require sandbox permission to launch Chrome.
+Historically, the first command checked assets, layout, hub projection across all five angles and 1×/2× display density. `--pointer` runs the T4/T5 browser smoke checks; `--interactions` includes T6 native keyboard/button checks. These legacy tools use installed Chrome or Edge with a project-local profile and produce evidence in `docs`. Their current compatibility with the intro gate has not been established by this documentation task. Playwright is the current T8 automation. Protocol-generated touch does not replace physical-device testing. Restricted agent environments may require sandbox permission to launch Chrome.
 
 ## Files and evidence
 
 - `src/features/wheel-navigation/`: controller hook, composition, centralized section configuration, pure mechanics, calibration and tests.
 - `vitest.config.ts`: Node mathematical tests and jsdom integration tests, with project-local cache. `npm.cmd test` runs once without watch mode.
-- `src/assets/`: original neutral wheel, supplied transparent candidate and four original Figma SVG assets. Both PNGs are preserved unchanged.
+- `src/assets/`: original neutral wheel, supplied transparent candidate and four original Figma SVG assets. Both PNGs are preserved unchanged; `WheelArtwork.tsx` imports the WebP derivative. The health audit records identical decoded alpha and the contour checksum update without recalibration.
 - `docs/home-desktop.png`, `docs/home-mobile.png`, `docs/home-short.png`: inspected captures.
 - `docs/asset-inspection.png`: white/magenta composites and temporary rotation/rim overlays, never used as app artwork.
 - `docs/static-verification.json`: browser measurements and alpha scan.
 - `docs/pointer-verification.json`, `docs/settled-*.png`: interaction results and all five settled states.
 
-The project already has a local Git repository on `main`. Existing uncommitted changes are preserved. No commit, remote change, push, publication or deployment was performed during T7/T8.
+The current documentation-maintenance checkpoint is on `loading-section`, with pre-existing modified and untracked user work preserved. Historical Git snapshots in evidence reports describe their original tasks. No commit, branch change, remote write, publishing or development-server management is authorized by this cleanup.
 
-Targeted pointer corrections and remaining known audit issues: [verification record](docs/POINTER_CORRECTIONS.md).
+The [consolidated historical records](docs/T2_T6_IMPLEMENTATION.md#consolidated-historical-records) retain pure-math verification, pointer-focus diagnosis, intermediate interior geometry, their original results and evidence references. Endpoint focus and desktop control overlap were later resolved in T7/T8.
 
-Latest interior-area revision: [validation record](docs/INTERIOR_DRAG.md).
+See [current mechanical verification baseline](docs/T7_T8_VALIDATION.md) and [historical contour calibration/checkpoint](docs/VISIBLE_EDGE_BAND.md). The latter records an earlier 11px maximum inset; the current maximum is 45px.
 
-Current visible-edge band and checkpoint: [verification record](docs/VISIBLE_EDGE_BAND.md). Earlier circle/ring reports are historical.
-
-With the build in `.tmp/audit-build`, run `node scripts/verify-wheel-band.mjs` to test the band in temporary Chrome without a development server. `--calibrate` regenerates the source contour from the unchanged artwork loaded by that build; do not regenerate it for unrelated changes.
+With an authorized build in `.tmp/audit-build`, `node scripts/verify-wheel-band.mjs` checks the band without a development server. The health audit records a standalone CDP transport failure and a successful temporary adapter run; compatibility is not assumed. `--calibrate` regenerates the contour and must not be used for unrelated changes.

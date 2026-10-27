@@ -1,14 +1,33 @@
 import statusIndicator from './assets/status-indicator.svg'
 import { SteeringWheelNavigator } from './features/wheel-navigation/SteeringWheelNavigator'
-import { useState } from 'react'
+import { useCallback, useLayoutEffect, useRef, useState } from 'react'
 import type { SectionId } from './features/wheel-navigation/sections'
 import { useCinematicTransition } from './features/cinematic-transition/useCinematicTransition'
 import { CinematicLayer } from './features/cinematic-transition/CinematicLayer'
 import { SectionPlaceholder } from './features/cinematic-transition/SectionPlaceholder'
+import { RaceStartOverlay } from './features/race-start/RaceStartOverlay'
 
 export default function App() {
+  const [showIntro, setShowIntro] = useState(() => {
+    try {
+      const expiresAt = Number(localStorage.getItem('gt3-race-start-expires-at'))
+      return !(Number.isFinite(expiresAt) && expiresAt > Date.now())
+    } catch { return true }
+  })
+  const introCompleted = useRef(false)
+  const finishIntro = useCallback(() => {
+    introCompleted.current = true
+    setShowIntro(false)
+  }, [])
   const [confirmation, setConfirmation] = useState<{ section: SectionId; count: number } | null>(null)
   const { state, enter, restore, rememberActivation, navigationRef, wheelStageRef, contentRef, proxyRef, dockRef, statusRef, streaksRef } = useCinematicTransition()
+
+  useLayoutEffect(() => {
+    if (!showIntro && introCompleted.current) {
+      introCompleted.current = false
+      navigationRef.current?.querySelector<HTMLButtonElement>('.section-label--active')?.focus({ preventScroll: true })
+    }
+  }, [showIntro, navigationRef])
 
   const confirm = (section: SectionId) => {
     if (state.phase !== 'navigation') return
@@ -18,6 +37,7 @@ export default function App() {
 
   return (
     <>
+      <div inert={showIntro}>
       <main className="portfolio-shell bg-carbon text-ice">
       <header className="site-header">
         <div className="identity mb-1.25">
@@ -58,6 +78,8 @@ export default function App() {
       </footer>
       </main>
       <CinematicLayer state={state} proxyRef={proxyRef} dockRef={dockRef} streaksRef={streaksRef} onRestore={restore} />
+      </div>
+      {showIntro && <RaceStartOverlay onComplete={finishIntro} />}
     </>
   )
 }

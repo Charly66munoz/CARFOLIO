@@ -137,3 +137,96 @@ button:focus-visible { outline: 2px solid var(--color-silver); outline-offset: 4
 @media (prefers-reduced-motion: reduce) {
   .speed-streaks { display: none; }
 }
+
+/* Race Start owns only its cover; HOME keeps its existing geometry. */
+.race-start-overlay {
+  position: fixed; inset: 0; z-index: 30; isolation: isolate;
+  display: grid; place-items: center; overflow: hidden;
+  background: var(--color-carbon); color: var(--color-ice);
+  touch-action: none; overscroll-behavior: contain;
+}
+.race-start-atmosphere { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+.race-start-atmosphere .atmosphere-graphite { top: calc(50% - 358px); }
+.race-start-atmosphere .atmosphere-silver { top: calc(50% - 160px); }
+.race-start-content { position: relative; text-align: center; }
+.race-light-assembly {
+  display: flex; justify-content: center; align-items: center;
+  gap: clamp(10px, 3.1vw, 52px); width: max-content; margin: 0 auto;
+}
+.race-lamp {
+  position: relative; display: block; flex: none;
+  width: clamp(40px, 7.5vw, 126px); aspect-ratio: 1; border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--color-silver) 18%, var(--color-carbon));
+  background:
+    radial-gradient(ellipse at 36% 20%, #a8adb41a, transparent 55%),
+    radial-gradient(circle at 50% 45%, #1d2025, #0b0d10 78%);
+  box-shadow: 0 0 0 2px #08090b, 0 -1px 0 3px #a8adb438, 0 1px 0 4px #050608, inset 0 2px 4px #f1f0ec14, inset 0 -8px 12px #000b;
+}
+.race-lamp::before, .race-lamp::after {
+  content: ''; position: absolute; border-radius: inherit; pointer-events: none;
+}
+.race-lamp::before {
+  inset: 8%; opacity: 0.24;
+  background:
+    radial-gradient(circle at 30% 28%, #f1f0ec99 0 0.35px, #000a 0.7px 1.05px, transparent 1.4px),
+    radial-gradient(circle at 30% 28%, #f1f0ec88 0 0.35px, #0009 0.7px 1.05px, transparent 1.4px);
+  background-size: 3.6px 3.2px;
+  background-position: 0 0, 1.8px 1.6px;
+  box-shadow: inset 0 0 12px 5px #0005;
+}
+.race-lamp::after {
+  inset: 1px; opacity: 0.55;
+  background: radial-gradient(ellipse at 50% -5%, #f1f0ec50, transparent 48%), radial-gradient(ellipse at 50% 105%, #0007, transparent 48%);
+  box-shadow: inset 0 0 0 3px #0005, inset 0 0 0 5px #f1f0ec0c;
+}
+.race-lamp[data-lit='true'] {
+  border-color: #ed2632;
+  background:
+    radial-gradient(ellipse at 38% 30%, #ffb99b80, transparent 38%),
+    radial-gradient(circle at 50% 48%, #ff4232, #ef1725 60%, #ac0018 84%, #57000e);
+  box-shadow: 0 0 0 2px #180409, 0 -1px 0 3px #ff756c99, 0 1px 0 5px #230408,
+    inset 0 0 0 4px #60040c, inset 0 -8px 12px #30000899,
+    0 0 28px #ff0d244d, 0 0 65px #c6283233;
+}
+.race-lamp[data-lit='true']::before {
+  opacity: 0.65;
+  background-image:
+    radial-gradient(circle at 30% 28%, #ffeddccc 0 0.35px, #6e001566 0.7px 1.05px, transparent 1.4px),
+    radial-gradient(circle at 30% 28%, #ffbfa8aa 0 0.35px, #68001266 0.7px 1.05px, transparent 1.4px);
+}
+.race-lamp[data-lit='true']::after {
+  opacity: 0.85;
+  background:
+    radial-gradient(ellipse 17% 12% at 34% 30%, #fffde5cc, #ffddc473 40%, transparent 75%),
+    radial-gradient(circle 1.8px at 50% 51%, #ffefdf, #fff4 50%, transparent),
+    radial-gradient(ellipse 20% 12% at 62% 70%, #ffe9c499, transparent 75%),
+    radial-gradient(ellipse at 50% -5%, #ffb4a166, transparent 43%);
+  box-shadow: inset 0 0 0 3px #5d000899, inset 0 0 0 5px #ff5b4555, inset 0 -1px 1px #ffe2db;
+}
+.race-start-action { display: grid; place-items: center; height: 80px; margin-top: clamp(36px, 4.25vw, 71px); }
+.race-start-button {
+  position: relative; z-index: 1; min-width: 220px; min-height: 80px; padding: 16px 24px;
+  border: 0; border-radius: 0; background: transparent; box-shadow: none; color: var(--color-ice);
+  font: 400 clamp(12px, 1.55vw, 26px) var(--font-sans); letter-spacing: clamp(4px, 0.9vw, 15px); cursor: pointer;
+  opacity: 0;
+  /* The pulse has no backwards fill, so it cannot override the entrance. */
+  animation: race-start-entrance 600ms ease-out forwards,
+    race-start-pulse 2s ease-in-out 600ms infinite;
+}
+.race-start-button::after {
+  content: ''; position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%);
+  width: clamp(24px, 3.1vw, 52px); height: 2px; background: var(--color-sport);
+}
+.race-start-button:focus-visible { outline: none; }
+.race-start-button:focus-visible::before {
+  content: ''; position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%);
+  width: calc(clamp(24px, 3.1vw, 52px) + 20px); height: 6px;
+  background: linear-gradient(90deg, var(--color-ice) 0 2px, transparent 2px calc(100% - 2px), var(--color-ice) calc(100% - 2px));
+}
+.race-start-button:disabled { animation: none; opacity: 1; cursor: default; }
+.race-start-overlay .speed-streaks { pointer-events: none; }
+@keyframes race-start-entrance { from { opacity: 0; } to { opacity: 1; } }
+@keyframes race-start-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+@media (prefers-reduced-motion: reduce) {
+  .race-start-button { animation: none; opacity: 1; }
+}
