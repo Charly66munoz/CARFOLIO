@@ -13,7 +13,7 @@ The user explicitly authorized resolving T2 and implementing T4, T5 and T6 seque
 | T5 | **Pass.** One GSAP tween owns the angle: 240ms, `power2.out`, no inertia or overshoot. Release commits the nearest section; wheel and track consume one snapshot. Obsolete callbacks are invalidated. New gestures interrupt at the displayed angle; new commands replace a snap. Resize preserves selection; reduced motion assigns exact targets. |
 | T6 | **Pass.** Left/Right, Down/Up, Home/End, Enter, previous/next buttons, labels, center button and explicit ENTER control. Selection and confirmation are separate. A single transaction confirms the latest committed section, finishes its snap and calls `onConfirm(section)` once per accepted activation. Active gestures reject confirmation. No routes or destination pages. |
 
-The approved order and mapping remain ABOUT −36°, CONTACT −18°, HOME 0°, PROJECTS +18°, STACK +36°. Positive rotation remains clockwise and endpoints clamp without wrapping.
+The approved order and mapping remain ABOUT −36°, EXPERIENCE −18°, HOME 0°, PROJECTS +18°, STACK +36°. Positive rotation remains clockwise and endpoints clamp without wrapping.
 
 The App records confirmation text and an activation count so behavior is reviewable. An inactive label selects; a subsequent activation of the committed label confirms. A browser click following a rim gesture has no confirmation handler. Native buttons keep native activation; repeated Enter is suppressed without a duplicate container key handler.
 
@@ -111,7 +111,7 @@ The tests cover:
 - All five exact section IDs/labels/angles and order, HOME index 2 at 0°, and derived limits/step.
 - Clamping at both endpoints and continuous interior angles without wrapping.
 - Normalization to `(-180°, +180°]`, positive and negative multi-turn inputs, signed zero and both ±180° polar branch crossings.
-- Clockwise/right motion toward PROJECTS and STACK, counterclockwise/left motion toward CONTACT and ABOUT, and no jump when the first polar sample matches the grab position.
+- Clockwise/right motion toward PROJECTS and STACK, counterclockwise/left motion toward EXPERIENCE and ABOUT, and no jump when the first polar sample matches the grab position.
 - Immediate reversal at either limit after overshoot, using each actual previous polar sample. T4 must retain that latest sample in its controller; the pure function itself stores no pointer history.
 - Exact mappings, out-of-range nearest sections, all four midpoint ties toward HOME, and values immediately on either side of each midpoint.
 - Annular inclusion at both boundaries, center/background/corner exclusion, translated centers, diagonal points, invalid bounds, and 288/400/526-pixel stage sizes.

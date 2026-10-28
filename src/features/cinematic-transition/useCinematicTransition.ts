@@ -24,6 +24,7 @@ export function useCinematicTransition() {
   const invokingControl = useRef<HTMLElement | null>(null)
   const activationTarget = useRef<HTMLElement | null>(null)
   const navigationScroll = useRef({ x: 0, y: 0 })
+  const outgoingScroll = useRef<{ x: number; y: number } | null>(null)
   const reverseEntry = useRef(false)
   const publish = useCallback((next: CinematicState) => {
     current.current = next
@@ -52,8 +53,9 @@ export function useCinematicTransition() {
       return true
     }
     reverseEntry.current = current.current.phase === 'entering'
+    outgoingScroll.current = reverseEntry.current ? null : { x: window.scrollX, y: window.scrollY }
     statusRef.current?.focus({ preventScroll: true })
-    if (wheelStageRef.current) window.scrollTo({ left: navigationScroll.current.x, top: navigationScroll.current.y, behavior: 'instant' })
+    if (reverseEntry.current && wheelStageRef.current) window.scrollTo({ left: navigationScroll.current.x, top: navigationScroll.current.y, behavior: 'instant' })
     publish({ ...current.current, phase: 'restoring' })
     return true
   }, [publish])
@@ -73,6 +75,7 @@ export function useCinematicTransition() {
       context.current?.revert()
       context.current = null
       timeline.current = null
+      outgoingScroll.current = null
       // The carrier has no React-owned inline styles. Explicitly reset its
       // endpoint after revert, including zero-duration preference/resize sets.
       proxy.removeAttribute('style')
@@ -89,6 +92,15 @@ export function useCinematicTransition() {
       return
     }
     context.current?.revert()
+    const outgoing = outgoingScroll.current
+    const contentOffset = { x: 0, y: 0 }
+    if (outgoing) {
+      // Restore measurement coordinates and compensate the outgoing scene in
+      // this same layout effect, so no intermediate scroll position is painted.
+      window.scrollTo({ left: navigationScroll.current.x, top: navigationScroll.current.y, behavior: 'instant' })
+      contentOffset.x = window.scrollX - outgoing.x
+      contentOffset.y = window.scrollY - outgoing.y
+    }
     const source = wheel.getBoundingClientRect(), target = dock.getBoundingClientRect()
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     context.current = gsap.context(() => {
@@ -105,11 +117,13 @@ export function useCinematicTransition() {
       if (reduced) {
         motion.to(navigation, { opacity: 0, duration: 0.15 }, 0)
           .to(proxy, { autoAlpha: 1, duration: 0.15 }, 0)
-          .fromTo(content, { autoAlpha: 0, y: 0 }, { autoAlpha: 1, y: 0, duration: 0.15 }, 0)
+          .fromTo(content, { autoAlpha: 0, ...contentOffset }, { autoAlpha: 1, ...contentOffset, duration: 0.15 }, 0)
       } else {
         motion.to(navigation, { opacity: 0, duration: 0.18, ease: 'power1.out' }, 0)
           .to(proxy, { x: target.left, y: target.top, scale: target.width / source.width, duration: 1.23, ease: 'power2.inOut' }, 0.22)
-          .fromTo(content, { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.7, ease: 'power2.out' }, 1.1)
+          // Completed sections fade out in place; entry retains its 12px lift.
+          .fromTo(content, { autoAlpha: 0, x: contentOffset.x, y: outgoing ? contentOffset.y : 12 },
+            { autoAlpha: 1, ...contentOffset, duration: 0.7, ease: 'power2.out' }, 1.1)
       }
       const streaks = streaksRef.current?.children
       if (streaks && !reduced) {
@@ -119,6 +133,7 @@ export function useCinematicTransition() {
       if (state.phase === 'restoring') motion.progress(1, true).timeScale(reduced ? 1 : 1.5).reverse()
       else motion.play()
     })
+    outgoingScroll.current = null
   }, [state.phase, state.destination, complete])
 
   useLayoutEffect(() => {
@@ -152,7 +167,7 @@ export function useCinematicTransition() {
     }
     const preventScroll = (event: Event) => { if (travelling()) event.preventDefault() }
     const scroll = () => {
-      if (travelling() && (window.scrollX !== navigationScroll.current.x || window.scrollY !== navigationScroll.current.y)) {
+      if (travelling() && !outgoingScroll.current && (window.scrollX !== navigationScroll.current.x || window.scrollY !== navigationScroll.current.y)) {
         window.scrollTo({ left: navigationScroll.current.x, top: navigationScroll.current.y, behavior: 'instant' })
       }
     }
@@ -179,6 +194,7 @@ export function useCinematicTransition() {
   useLayoutEffect(() => () => {
     context.current?.revert()
     timeline.current = null
+    outgoingScroll.current = null
   }, [])
 
   return { state, enter, restore, complete, rememberActivation, wheelStageRef, navigationRef, contentRef, proxyRef, dockRef, statusRef, streaksRef }

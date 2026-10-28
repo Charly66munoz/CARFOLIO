@@ -1,6 +1,6 @@
 export const SECTIONS = [
   { id: 'about', label: 'ABOUT', angleDeg: -36 },
-  { id: 'contact', label: 'CONTACT', angleDeg: -18 },
+  { id: 'experience', label: 'EXPERIENCE', angleDeg: -18 },
   { id: 'home', label: 'HOME', angleDeg: 0 },
   { id: 'projects', label: 'PROJECTS', angleDeg: 18 },
   { id: 'stack', label: 'STACK', angleDeg: 36 },

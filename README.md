@@ -4,7 +4,7 @@ Local interactive portfolio prototype for Agustín López, using React, Vite, st
 
 ## Implemented functionality and design scope
 
-- Steering navigation: ABOUT −36°, CONTACT −18°, HOME 0°, PROJECTS +18°, STACK +36°. Positive rotation is clockwise; endpoints clamp. Selecting never automatically confirms.
+- Steering navigation: ABOUT −36°, EXPERIENCE −18°, HOME 0°, PROJECTS +18°, STACK +36°. Positive rotation is clockwise; endpoints clamp. Selecting never automatically confirms.
 - Calibrated 1–45 CSS-pixel contour band, captured dragging, cancellation, one GSAP snap, synchronized track, keyboard/native-button alternatives and explicit confirmation.
 - Cinematic entry into four placeholder sections and floating-wheel restoration; HOME remains navigation. Escape reverses entry; reduced motion uses a short fade.
 - Race Start introduction: 0/1/2/3s lights, explicit START/fifth light, 600ms button entrance, shared streak reveal and 15-minute expiry. HOME stays mounted behind the intro gate; START does not confirm a section.

@@ -6,7 +6,7 @@ The user approved this local placeholder prototype on top of `d945e4a`. The vali
 
 `useWheelNavigation` remains the sole mechanical controller. Its source, angle configuration, math, calibrated contour/hit testing and both artwork assets are unchanged. `SteeringWheelNavigator` exposes an optional stage ref; the wheel's decorative image/shadow markup is shared through `WheelArtwork` without moving its pointer surface or controls.
 
-`useCinematicTransition` owns a captured destination and four phases independently of page content. `CinematicLayer` provides the non-interactive visual wheel, six decorative streaks, and one native restore button. `App` supplies placeholder content through an ordinary content ref; the timeline has no knowledge of ABOUT/PROJECTS/STACK/CONTACT page implementations.
+`useCinematicTransition` owns a captured destination and four phases independently of page content. `CinematicLayer` provides the non-interactive visual wheel, six decorative streaks, and one native restore button. `App` supplies placeholder content through an ordinary content ref; the timeline has no knowledge of ABOUT/PROJECTS/STACK/EXPERIENCE page implementations.
 
 There is one visible wheel throughout normal travel. A layout-effect handoff aligns image and shadow before paint. Translation/scale affect only the visual carrier; its rotation derives from the confirmed centralized section definition. The original mounted navigator is inert during travel and section viewing. Source geometry, selection and angle remain intact for restoration.
 

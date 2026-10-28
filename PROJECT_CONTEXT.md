@@ -35,7 +35,7 @@ Five visual screens represent the five steering-wheel positions:
 | Section | Wheel angle | Position |
 |---|---:|---|
 | ABOUT | -36° | Far left |
-| CONTACT | -18° | Left |
+| EXPERIENCE | -18° | Left |
 | HOME | 0° | Center / initial |
 | PROJECTS | +18° | Right |
 | STACK | +36° | Far right |
@@ -106,7 +106,7 @@ We initially considered a vertical stack of sections, but decided to replace it 
 
 **Approved order (left to right):**
 
-`ABOUT | CONTACT | HOME | PROJECTS | STACK`
+`ABOUT | EXPERIENCE | HOME | PROJECTS | STACK`
 
 This allows the wheel to turn naturally **both left and right** from its initial HOME position.
 
@@ -142,20 +142,20 @@ Navigation **must not loop or wrap around infinitely**. ABOUT and STACK are the 
 | No turn | Centered | HOME | 0° |
 | Turn right | Clockwise | PROJECTS | +18° |
 | Turn farther right | Clockwise | STACK | +36° |
-| Turn left | Counterclockwise | CONTACT | -18° |
+| Turn left | Counterclockwise | EXPERIENCE | -18° |
 | Turn farther left | Counterclockwise | ABOUT | -36° |
 
-**Never reverse this mapping during implementation.** From HOME, the first step to the right is PROJECTS and the second is STACK; the first step to the left is CONTACT and the second is ABOUT.
+**Never reverse this mapping during implementation.** From HOME, the first step to the right is PROJECTS and the second is STACK; the first step to the left is EXPERIENCE and the second is ABOUT.
 
 The red stripe must visibly reflect the physical rotation:
 
 - HOME (0°): stripe points vertically upward.
 - PROJECTS (+18°) and STACK (+36°): stripe moves **to the right** of the top position.
-- CONTACT (-18°) and ABOUT (-36°): stripe moves **to the left** of the top position.
+- EXPERIENCE (-18°) and ABOUT (-36°): stripe moves **to the left** of the top position.
 
 **Rotation direction and Figma consistency**
 
-The Figma design has been corrected and now matches the approved rotation convention. Clockwise rotation selects PROJECTS and STACK; counterclockwise rotation selects CONTACT and ABOUT. Both the Figma design and this document must be treated as consistent references.
+The Figma design has been corrected and now matches the approved rotation convention. Clockwise rotation selects PROJECTS and STACK; counterclockwise rotation selects EXPERIENCE and ABOUT. Both the Figma design and this document must be treated as consistent references.
 
 **CSS/browser convention:** In ordinary screen coordinates, `transform: rotate(angleDeg)` rotates clockwise for positive values and counterclockwise for negative values. Preserve this mapping in Pointer Events math, snapping, and synchronization with the horizontal track.
 
@@ -361,7 +361,7 @@ Centralize section definitions and valid angles in one configuration instead of 
 Implemented locally:
 
 - T1–T8 mechanics and accessibility/mobile baseline: calibrated fixed hub, 1–45 CSS-pixel contour band, capture/cancellation, snapping, synchronized track, keyboard alternatives and explicit confirmation.
-- Cinematic entry/return, floating restore control, Escape reversal and reduced motion. HOME remains navigation; ABOUT, CONTACT, PROJECTS and STACK render placeholders only.
+- Cinematic entry/return, floating restore control, Escape reversal and reduced motion. HOME remains navigation; ABOUT, EXPERIENCE, PROJECTS and STACK render placeholders only.
 - Race Start introduction, explicit START, shared decorative streaks, guarded handoff to unchanged HOME and 15-minute localStorage expiry.
 - Runtime artwork: transparent 1254 × 1254 WebP. Both earlier PNGs are preserved; the health audit records pixel-identical alpha and the contour checksum correction without recalibration.
 
@@ -371,7 +371,7 @@ The latest available [Race Start report](docs/RACE_START_TIMING.md), dated 2026-
 
 Physical Android/iOS input, native Safari, NVDA/VoiceOver, actual-device fluidity and final cinematic aesthetic approval remain pending. Real content, contact destinations, full routing, sound, final badge/font/artwork refinement, complete responsive art direction and deployment remain future work requiring approval.
 
-**Approved counters:** ABOUT `01 / 05`, CONTACT `02 / 05`, HOME `03 / 05`, PROJECTS `04 / 05`, STACK `05 / 05`. Figma frames remain static references, not evidence of running behavior.
+**Approved counters:** ABOUT `01 / 05`, EXPERIENCE `02 / 05`, HOME `03 / 05`, PROJECTS `04 / 05`, STACK `05 / 05`. Figma frames remain static references, not evidence of running behavior.
 
 ## 13. Current design exploration — internal sections
 

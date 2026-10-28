@@ -19,7 +19,7 @@ Preserve the approved [Figma design](https://www.figma.com/design/oEXjYLVP8tfpWG
 | Index | Section | Angle | Counter |
 |---:|---|---:|---|
 | 0 | ABOUT | −36° | 01 / 05 |
-| 1 | CONTACT | −18° | 02 / 05 |
+| 1 | EXPERIENCE | −18° | 02 / 05 |
 | 2 | HOME | 0° | 03 / 05 |
 | 3 | PROJECTS | +18° | 04 / 05 |
 | 4 | STACK | +36° | 05 / 05 |
@@ -68,7 +68,7 @@ Keep mechanical pointer/snap logic in the mechanical controller hook. Cinematic 
 ```ts
 type SectionId =
   | 'about'
-  | 'contact'
+  | 'experience'
   | 'home'
   | 'projects'
   | 'stack';
@@ -190,7 +190,7 @@ Choose the configured angle with minimum absolute distance. Midpoint ties resolv
 
 | Angle | Result |
 |---:|---|
-| −27° | CONTACT |
+| −27° | EXPERIENCE |
 | −9° | HOME |
 | +9° | HOME |
 | +27° | PROJECTS |
@@ -470,4 +470,4 @@ Pending manual validation: physical Android/iOS drag/capture/cancellation, nativ
 
 Known limitations: no resource-readiness gate, explicit image-error recovery or pre-JavaScript failure UI; the intro can finish before very slow artwork delivery. Local timing is not hosted performance. Short-cycle heap observations do not settle long-session leak attribution. Standalone CDP transport reliability and an external dependency vulnerability audit remain unresolved; no upgrades or security-audit result are claimed. Generated `.tmp` reports can be overwritten by later runs, so checkpoint reports must retain their scope and limitations.
 
-Future work requires separate approval: implementation of reviewed Engineering Dossier internal designs (ABOUT layout still under review), real portfolio content/contact destinations, routing, sound, final artwork/badge/font treatment, full responsive art direction, resource/performance/recovery changes, publishing or deployment. Preserve HOME, approved mapping, mechanics and existing cinematic transitions during unrelated tasks. Do not infer implementation authorization from design discussions.
+Future work requires separate approval: implementation of reviewed Engineering Dossier internal designs (ABOUT layout still under review), real portfolio content/experience destinations, routing, sound, final artwork/badge/font treatment, full responsive art direction, resource/performance/recovery changes, publishing or deployment. Preserve HOME, approved mapping, mechanics and existing cinematic transitions during unrelated tasks. Do not infer implementation authorization from design discussions.

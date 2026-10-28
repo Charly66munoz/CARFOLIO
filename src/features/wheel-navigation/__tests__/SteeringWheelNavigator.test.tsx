@@ -185,7 +185,7 @@ describe('explicit confirmation and keyboard controls', () => {
     const { navigator, onConfirm } = setup()
     fireEvent.click(screen.getByRole('button', { name: 'PROJECTS' }))
     const obsolete = animations.calls.at(-1)!
-    fireEvent.click(screen.getByRole('button', { name: 'CONTACT' }))
+    fireEvent.click(screen.getByRole("button", { name: "EXPERIENCE" }));
     fireEvent.click(screen.getByRole('button', { name: 'STACK' }))
     act(() => { obsolete.vars.onComplete() })
     flush()

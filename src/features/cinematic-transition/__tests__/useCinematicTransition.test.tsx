@@ -19,8 +19,8 @@ describe('cinematic confirmation transactions', () => {
 
   it('reverses entry without accepting stale completion or queuing destinations', () => {
     const { result } = renderHook(useCinematicTransition)
-    act(() => { result.current.enter('contact'); result.current.restore(); result.current.complete('section') })
-    expect(result.current.state).toEqual({ phase: 'restoring', destination: 'contact' })
+    act(() => { result.current.enter('experience'); result.current.restore(); result.current.complete('section') })
+    expect(result.current.state).toEqual({ phase: 'restoring', destination: 'experience' })
     act(() => { expect(result.current.restore()).toBe(false); expect(result.current.enter('stack')).toBe(false) })
     act(() => result.current.complete('navigation'))
     expect(result.current.state).toEqual({ phase: 'navigation', destination: null })

@@ -5,6 +5,7 @@ export function InternalSectionLayout({ children }: { children: ReactNode }) {
   return (
     <div className="internal-section-layout">
       <SectionBackground />
+      <SectionBackground />
       <div className="internal-section-content">{children}</div>
     </div>
   )

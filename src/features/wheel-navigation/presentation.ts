@@ -2,6 +2,7 @@
 // Band distances stay in CSS pixels; the calibrated contour follows the artwork.
 export const WHEEL_PRESENTATION = {
   stageMaxPx: 526,
+  stageMaxMobilePx: 426,
   sourceSizePx: 1254,
   hubX: 625.95594,
   hubY: 645.82089,

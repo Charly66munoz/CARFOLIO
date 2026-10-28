@@ -57,7 +57,7 @@ npm.cmd run test:e2e
 ```
 
 - Final cross-browser report: `.tmp/playwright-report/results.json`.
-- Fifteen settled-state PNGs: `.tmp/playwright-results/wheel-navigation-T8-five-e-d7cad-rack-and-stable-screenshots-{chromium,firefox,webkit}/settled-{about,contact,home,projects,stack}.png`.
+- Fifteen settled-state PNGs: `.tmp/playwright-results/wheel-navigation-T8-five-e-d7cad-rack-and-stable-screenshots-{chromium,firefox,webkit}/settled-{about,experience,home,projects,stack}.png`.
 - Each settled image was compared byte-for-byte with a second capture in the same run. This checks rendering stability; no approved visual-regression baseline was created.
 - Current non-focused layout captures: `.tmp/t7-layout-{desktop,mobile,short}.png`; captured from the production build using `.tmp/capture-t7-layouts.mjs`.
 - Exact-edge evidence and keyboard-focus image: `.tmp/wheel-band-verification/results.json` and `keyboard-focus.png`.

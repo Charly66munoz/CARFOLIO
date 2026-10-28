@@ -6,7 +6,7 @@ describe('approved section configuration', () => {
   it('preserves all five section IDs, labels, angles and left-to-right order', () => {
     expect(SECTIONS).toEqual([
       { id: 'about', label: 'ABOUT', angleDeg: -36 },
-      { id: 'contact', label: 'CONTACT', angleDeg: -18 },
+      { id: 'experience', label: 'EXPERIENCE', angleDeg: -18 },
       { id: 'home', label: 'HOME', angleDeg: 0 },
       { id: 'projects', label: 'PROJECTS', angleDeg: 18 },
       { id: 'stack', label: 'STACK', angleDeg: 36 },
@@ -52,10 +52,10 @@ describe('pointer mathematics', () => {
     expect(advanceWheelAngle(angle, -72, -54)).toBe(36)
   })
 
-  it('turns counterclockwise from the top toward CONTACT, then ABOUT', () => {
+  it('turns counterclockwise from the top toward EXPERIENCE, then ABOUT', () => {
     const angle = advanceWheelAngle(0, -90, -108)
     expect(angle).toBe(-18)
-    expect(SECTIONS[nearestSectionIndex(angle)].id).toBe('contact')
+    expect(SECTIONS[nearestSectionIndex(angle)].id).toBe('experience')
     expect(advanceWheelAngle(angle, -108, -126)).toBe(-36)
   })
 
@@ -79,13 +79,13 @@ describe('pointer mathematics', () => {
 })
 
 describe('nearest section', () => {
-  it.each([[-36, 'about'], [-18, 'contact'], [0, 'home'], [18, 'projects'], [36, 'stack'], [-1000, 'about'], [1000, 'stack']])('maps %s to %s', (angle, expected) => {
+  it.each([[-36, 'about'], [-18, 'experience'], [0, 'home'], [18, 'projects'], [36, 'stack'], [-1000, 'about'], [1000, 'stack']])('maps %s to %s', (angle, expected) => {
     expect(SECTIONS[nearestSectionIndex(angle)].id).toBe(expected)
   })
 
   it.each([
-    [-27.000001, 'about'], [-27, 'contact'], [-26.999999, 'contact'],
-    [-9.000001, 'contact'], [-9, 'home'], [-8.999999, 'home'],
+    [-27.000001, 'about'], [-27, 'experience'], [-26.999999, 'experience'],
+    [-9.000001, 'experience'], [-9, 'home'], [-8.999999, 'home'],
     [8.999999, 'home'], [9, 'home'], [9.000001, 'projects'],
     [26.999999, 'projects'], [27, 'projects'], [27.000001, 'stack'],
   ])('resolves midpoint and adjacent angle %s toward %s', (angle, expected) => {

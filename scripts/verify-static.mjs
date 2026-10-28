@@ -110,9 +110,15 @@ try {
     await send('Emulation.setTouchEmulationEnabled',{enabled:true,maxTouchPoints:5})
     const touch=async(type,angle)=>{ const p=location(g,angle); await send('Input.dispatchTouchEvent',{type,touchPoints:type==='touchEnd'||type==='touchCancel'?[]:[{x:p.x,y:p.y,id:7}]}) }
     await touch('touchStart',-90); await touch('touchMove',-110); await touch('touchEnd',-110); await delay(320)
-    assert((await state()).angle===-18,'browser touch gesture commits CONTACT')
+    assert(
+      (await state()).angle === -18,
+      "browser touch gesture commits EXPERIENCE",
+    );
     await touch('touchStart',-90); await touch('touchMove',-120); await touch('touchCancel',-120); await delay(320)
-    assert((await state()).angle===-18,'protocol touch cancellation restores committed CONTACT')
+    assert(
+      (await state()).angle === -18,
+      "protocol touch cancellation restores committed EXPERIENCE",
+    );
     await send('Emulation.setTouchEmulationEnabled',{enabled:false})
     const settled=[]
     for(const angle of [-36,-18,0,18,36]) {

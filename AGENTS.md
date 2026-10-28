@@ -29,7 +29,8 @@
 - Engineering Dossier is the approved visual direction for internal sections only. The specific ABOUT layout remains under design review and has not been implemented.
 - Design discussions and documentation do not authorize implementation. Significant changes, full portfolio pages, routing, sound and deployment require a separate explicit request.
 - Keep steering mechanics independent of presentation and keep section/angle mapping centralized.
-- Required mapping: ABOUT = -36°, CONTACT = -18°, HOME = 0°, PROJECTS = +18°, STACK = +36°.
+- Required mapping: ABOUT = -36°, EXPERIENCE = -18°, HOME = 0°, PROJECTS = +18°, STACK = +36°.
+- Required mapping: ABOUT = -36°, EXPERIENCE = -18°, HOME = 0°, PROJECTS = +18°, STACK = +36°.
 - Positive angles turn the wheel clockwise/right; negative angles turn counterclockwise/left. Selection never automatically navigates.
 
 ## Task workflow

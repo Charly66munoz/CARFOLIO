@@ -1,8 +1,88 @@
 import { test, expect } from '@playwright/test'
 
+// Exercise native gutters. Chromium's headless hide-scrollbars flag hides the
+// scrollbar while still reserving scrollbar-gutter space, unlike overlay mode.
+test.use({ launchOptions: { ignoreDefaultArgs: ['--hide-scrollbars'] } })
+
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => localStorage.setItem('gt3-race-start-expires-at', String(Date.now() + 900000)))
 })
+
+test('HOME desktop: viewport fit preserves composition and permits short-screen scrolling', async ({ page }) => {
+  await page.goto('/')
+  for (const width of [761, 1024, 1440]) {
+    for (const height of [1080, 900, 800, 768, 746, 720, 600]) {
+      await page.setViewportSize({ width, height })
+      await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }))
+      expect(await page.evaluate(() => document.documentElement.scrollHeight)).toBe(Math.max(height, 746))
+      const wheel = (await page.locator('.wheel-stage').boundingBox())!
+      expect(wheel.y).toBe(168)
+      expect(wheel.width).toBe(526)
+      expect(wheel.height).toBe(526)
+      expect((await page.locator('.site-footer').boundingBox())!.y).toBe(694)
+      if (height < 746) {
+        await page.locator('.site-footer').scrollIntoViewIfNeeded()
+        expect(await page.evaluate(() => scrollY)).toBeGreaterThan(0)
+        const footer = (await page.locator('.site-footer').boundingBox())!
+        expect(footer.y + footer.height).toBeLessThanOrEqual(height)
+      }
+    }
+  }
+})
+
+for (const reducedMotion of [false, true]) {
+  test(`HOME desktop: cinematic alignment at 800px, reduced motion ${reducedMotion}`, async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 800 })
+    await page.emulateMedia({ reducedMotion: reducedMotion ? 'reduce' : 'no-preference' })
+    await page.goto('/')
+    const slider = page.getByRole('slider')
+    await slider.press('Home')
+    await expect(page.locator('.navigator')).toHaveAttribute('data-phase', 'idle')
+    const source = (await page.locator('.wheel-stage').boundingBox())!
+    const handoff = await page.evaluate(() => new Promise<{ x: number; y: number; width: number; height: number }>(resolve => {
+      const scenes = document.querySelector('.cinematic-scenes')!
+      const observer = new MutationObserver(() => {
+        if (scenes.getAttribute('data-phase') !== 'entering') return
+        observer.disconnect()
+        const { x, y, width, height } = document.querySelector('.cinematic-wheel')!.getBoundingClientRect()
+        resolve({ x, y, width, height })
+      })
+      observer.observe(scenes, { attributes: true, attributeFilter: ['data-phase'] })
+      document.querySelector<HTMLElement>('.wheel-surface')!.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }))
+    }))
+    // Reduced motion starts at the dock; normal motion must start at the
+    // pre-entry wheel position, including on browsers with classic scrollbars.
+    if (!reducedMotion) {
+      for (const key of ['x', 'y', 'width', 'height'] as const) expect(Math.abs(handoff[key] - source[key])).toBeLessThan(0.25)
+    }
+    await expect(page.locator('.cinematic-scenes')).toHaveAttribute('data-phase', 'section')
+    await expect(page.getByRole('heading', { name: 'More than code.', exact: true })).toBeFocused()
+    expect(await page.locator('.portfolio-shell').evaluate(element => getComputedStyle(element).minHeight)).toBe('900px')
+    expect(await page.evaluate(() => getComputedStyle(document.documentElement).scrollbarGutter)).toBe('auto')
+    await page.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'instant' }))
+    expect(await page.evaluate(() => scrollY)).toBeGreaterThan(0)
+    await page.getByRole('button', { name: 'Open portfolio navigation' }).click()
+    await expect(page.locator('.cinematic-scenes')).toHaveAttribute('data-phase', 'navigation')
+    await expect(slider).toBeFocused()
+    expect(await page.evaluate(() => scrollY)).toBe(0)
+    expect(await page.evaluate(() => document.documentElement.scrollHeight)).toBe(800)
+    expect(await page.locator('.wheel-stage').boundingBox()).toEqual(source)
+    await expect(page.locator('.section-scene')).toHaveCSS('transform', 'none')
+    if (!reducedMotion) {
+      await slider.press('End')
+      await expect(page.locator('.navigator')).toHaveAttribute('data-phase', 'idle')
+      await slider.press('Enter')
+      await page.waitForFunction(() => document.querySelector('.cinematic-wheel')!.getBoundingClientRect().width < 450)
+      await page.keyboard.press('Escape')
+      await page.keyboard.press('Escape')
+      await expect(page.locator('.cinematic-scenes')).toHaveAttribute('data-phase', 'navigation')
+      await expect(slider).toBeFocused()
+      await expect(page.locator('.navigator')).toHaveAttribute('data-angle', '36')
+      expect(await page.evaluate(() => document.documentElement.scrollHeight)).toBe(800)
+      expect(await page.locator('.wheel-stage').boundingBox()).toEqual(source)
+    }
+  })
+}
 
 test('C6 performance: collect frame timing during real GSAP entry', async ({ page }, info) => {
   await page.goto('/')
@@ -79,6 +159,7 @@ for (const reason of ['resize', 'reduced-motion', 'hiding']) {
     await expect(page.locator('.navigator')).toHaveAttribute('data-phase', 'idle')
     await page.getByRole('button', { name: 'Confirm ABOUT', exact: true }).click()
     await expect(page.locator('.cinematic-scenes')).toHaveAttribute('data-phase', 'entering')
+    const savedScroll = await page.evaluate(() => scrollY)
     if (reason === 'resize') await page.setViewportSize({ width: 320, height: 600 })
     if (reason === 'reduced-motion') await page.emulateMedia({ reducedMotion: 'reduce' })
     if (reason === 'hiding') await page.evaluate(() => {
@@ -96,6 +177,8 @@ for (const reason of ['resize', 'reduced-motion', 'hiding']) {
     expect(Math.abs(a.x - b.x) + Math.abs(a.y - b.y) + Math.abs(a.width - b.width)).toBeLessThan(0.25)
     // Exercise interruption in the opposite direction as well.
     if (reason === 'reduced-motion') await page.emulateMedia({ reducedMotion: 'no-preference' })
+    await page.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'instant' }))
+    expect(await page.evaluate(() => scrollY)).toBeGreaterThan(savedScroll)
     await page.getByRole('button', { name: 'Open portfolio navigation' }).click()
     await expect(page.locator('.cinematic-scenes')).toHaveAttribute('data-phase', 'restoring')
     if (reason === 'resize') await page.setViewportSize({ width: 390, height: 700 })
@@ -111,7 +194,115 @@ for (const reason of ['resize', 'reduced-motion', 'hiding']) {
     })
     await expect(page.locator('.navigator')).toHaveAttribute('data-angle', '-36')
     await expect(page.locator('.cinematic-wheel')).toHaveCSS('visibility', 'hidden')
+    await expect(page.locator('.section-scene')).toHaveCSS('transform', 'none')
+    await expect(page.locator('.section-scene')).toHaveCSS('visibility', 'hidden')
+    await expect(page.getByRole('button', { name: 'Confirm ABOUT', exact: true })).toBeFocused()
+    expect(await page.evaluate(() => scrollY)).toBeCloseTo(savedScroll, 0)
   })
+}
+
+for (const width of [390, 1440]) {
+  for (const reducedMotion of [false, true]) {
+    test(`ABOUT stationary restoration: ${width}px, reduced motion ${reducedMotion}`, async ({ page }) => {
+      test.setTimeout(60_000)
+      await page.setViewportSize({ width, height: 600 })
+      await page.emulateMedia({ reducedMotion: reducedMotion ? 'reduce' : 'no-preference' })
+      await page.goto('/')
+      const slider = page.getByRole('slider')
+      await slider.press('Home')
+      await expect(page.locator('.navigator')).toHaveAttribute('data-phase', 'idle')
+
+      for (const navigationTop of [0, 200]) {
+        for (const position of ['middle', 'bottom'] as const) {
+          await slider.focus()
+          await page.evaluate(top => window.scrollTo({ top, behavior: 'instant' }), navigationTop)
+          const savedScroll = await page.evaluate(() => scrollY)
+          const availableScroll = await page.evaluate(() => document.documentElement.scrollHeight - innerHeight)
+          expect(savedScroll).toBe(Math.min(navigationTop, availableScroll))
+          if (navigationTop > 0) expect(savedScroll).toBeGreaterThan(0)
+          const source = await page.locator('.wheel-stage').boundingBox()
+          await page.keyboard.press('Enter')
+          await expect(page.locator('.cinematic-scenes')).toHaveAttribute('data-phase', 'section')
+          await expect(page.getByRole('heading', { name: 'More than code.', exact: true })).toBeFocused()
+
+          const selector = position === 'middle' ? '.about-story-copy p:nth-child(2)' : '.about-interest:last-child h4'
+          await page.evaluate(({ selector, position }) => {
+            const point = document.querySelector(selector)!
+            const top = position === 'bottom' ? document.documentElement.scrollHeight : point.getBoundingClientRect().top + scrollY - 60
+            window.scrollTo({ top, behavior: 'instant' })
+          }, { selector, position })
+          expect(await page.evaluate(() => scrollY)).toBeGreaterThan(savedScroll)
+
+          // Capture before React handles a real click, at the committed handoff,
+          // and on every frame through cleanup. No artificial GSAP seeking.
+          const recording = await page.evaluateHandle(selector => {
+            const content = document.querySelector<HTMLElement>('.section-scene')!
+            const point = document.querySelector(selector)!
+            const scenes = document.querySelector('.cinematic-scenes')!
+            const button = document.querySelector<HTMLButtonElement>('.floating-wheel-control')!
+            const wheel = document.querySelector('.cinematic-wheel')!
+            const rotor = wheel.querySelector('.wheel-rotor')!
+            const samples: { x: number; y: number; visible: boolean; phase: string | null; rotation: string }[] = []
+            return { finished: new Promise<{
+              samples: typeof samples; dock: { x: number; y: number; width: number };
+              handoff: { x: number; y: number; width: number } | null
+            }>(resolve => {
+              let handoff: { x: number; y: number; width: number } | null = null
+              let navigationFrames = 0
+              const box = (element: Element) => {
+                const { x, y, width } = element.getBoundingClientRect()
+                return { x, y, width }
+              }
+              const dock = box(button)
+              const sample = () => {
+                const { x, y } = point.getBoundingClientRect()
+                const style = getComputedStyle(content)
+                samples.push({ x, y, visible: point.isConnected && style.visibility === 'visible' && Number(style.opacity) > 0,
+                  phase: scenes.getAttribute('data-phase'), rotation: getComputedStyle(rotor).transform })
+              }
+              const observer = new MutationObserver(() => {
+                if (scenes.getAttribute('data-phase') === 'restoring') handoff ??= box(wheel)
+                sample()
+              })
+              button.addEventListener('click', () => {
+                sample()
+                observer.observe(scenes, { attributes: true, attributeFilter: ['data-phase'] })
+                const frame = () => {
+                  sample()
+                  if (scenes.getAttribute('data-phase') === 'navigation' && ++navigationFrames === 2) {
+                    observer.disconnect()
+                    resolve({ samples, dock, handoff })
+                  } else requestAnimationFrame(frame)
+                }
+                requestAnimationFrame(frame)
+              }, { once: true, capture: true })
+            }) }
+          }, selector)
+          await page.getByRole('button', { name: 'Open portfolio navigation' }).click()
+          const { samples, dock, handoff } = await recording.evaluate(async recording => recording.finished)
+          await recording.dispose()
+          const visible = samples.filter(sample => sample.visible)
+          expect(visible.length).toBeGreaterThan(2)
+          expect(visible.some(sample => sample.phase === 'restoring')).toBe(true)
+          for (const sample of visible) {
+            expect(Math.abs(sample.x - samples[0].x)).toBeLessThan(0.25)
+            expect(Math.abs(sample.y - samples[0].y)).toBeLessThan(0.25)
+          }
+          expect(samples.filter(sample => sample.phase !== 'navigation').every(sample => sample.rotation === samples[0].rotation)).toBe(true)
+          expect(samples.filter(sample => sample.phase === 'navigation').every(sample => !sample.visible)).toBe(true)
+          expect(handoff).not.toBeNull()
+          for (const key of ['x', 'y', 'width'] as const) expect(Math.abs(handoff![key] - dock[key])).toBeLessThan(0.25)
+          await expect(slider).toBeFocused()
+          expect(await page.evaluate(() => scrollY)).toBeCloseTo(savedScroll, 0)
+          expect(await page.locator('.wheel-stage').boundingBox()).toEqual(source)
+          await expect(page.locator('.navigator')).toHaveAttribute('data-angle', '-36')
+          await expect(page.locator('.section-scene')).toHaveCSS('transform', 'none')
+          await expect(page.locator('.section-scene')).toHaveCSS('visibility', 'hidden')
+          await expect(page.locator('.cinematic-wheel')).toHaveCSS('visibility', 'hidden')
+        }
+      }
+    })
+  }
 }
 
 for (const [width, columns] of [[320, 1], [390, 1], [820, 2], [1024, 4], [1440, 4]] as const) {
@@ -241,10 +432,10 @@ for (const width of [1440, 390]) {
     await page.evaluate(() => Promise.all([...document.images].map(image => image.decode())))
     const errors: string[] = []
     page.on('pageerror', error => errors.push(error.message))
-    for (const [section, angle] of [['ABOUT', -36], ['CONTACT', -18], ['PROJECTS', 18], ['STACK', 36]] as const) {
+    for (const [section, angle] of [['ABOUT', -36], ['EXPERIENCE', -18], ['PROJECTS', 18], ['STACK', 36]] as const) {
       const slider = page.getByRole('slider')
       await slider.press('Home')
-      const index = ['ABOUT', 'CONTACT', 'HOME', 'PROJECTS', 'STACK'].indexOf(section)
+      const index = ['ABOUT', 'EXPERIENCE', 'HOME', 'PROJECTS', 'STACK'].indexOf(section)
       for (let step = 0; step < index; step++) await slider.press('ArrowRight')
       await expect(page.locator('.navigator')).toHaveAttribute('data-angle', String(angle))
       await expect(page.locator('.navigator')).toHaveAttribute('data-phase', 'idle')

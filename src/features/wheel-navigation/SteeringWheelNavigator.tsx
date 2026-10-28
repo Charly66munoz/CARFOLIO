@@ -24,9 +24,9 @@ export function SteeringWheelNavigator({ onConfirm, wheelStageRef }: SteeringWhe
       <HorizontalSectionTrack angleDeg={navigation.state.angleDeg} selectedIndex={navigation.state.selectedIndex} displayIndex={displayIndex}
         activateLabel={navigation.activateLabel} onKeyDown={navigation.onKeyDown} />
       <SteeringWheel {...navigation} stageRef={wheelStageRef} />
-      <div className="interaction-hints">
-        <div><p>01 — DRAG TO SELECT</p><span>Rotate the wheel to browse</span></div>
-        <div><p>02 — CLICK TO ENTER</p><span>Confirm your destination</span></div>
+      <div className="interaction-hints ">
+        <div><span>Rotate the wheel to browse</span></div>
+        <div><span>Confirm your destination</span></div>
       </div>
       <div className="navigator-controls">
         <button type="button" aria-label="Previous section" disabled={!navigation.canConfirm} aria-disabled={navigation.state.selectedIndex === 0}

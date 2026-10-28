@@ -62,7 +62,7 @@ An independent 2× `download_assets` node export returned an opaque square, unli
 
 ## Static composition and layout
 
-The page preserves `ABOUT | CONTACT | HOME | PROJECTS | STACK`, HOME at 0°, the five palette tokens, 250-pixel desktop slots, neutral original wheel, stationary atmosphere, header, cues and footer. Static section and contact labels have no pretend activation handlers. A visible preview notice explains the current interaction status.
+The page preserves `ABOUT | EXPERIENCE | HOME | PROJECTS | STACK`, HOME at 0°, the five palette tokens, 250-pixel desktop slots, neutral original wheel, stationary atmosphere, header, cues and footer. Static section and contact labels have no pretend activation handlers. A visible preview notice explains the current interaction status.
 
 All five visible static assets were checked as local, nonempty files, associated with their Figma layers and actual component callsites:
 
