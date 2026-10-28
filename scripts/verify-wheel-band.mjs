@@ -40,7 +40,7 @@ try {
       try {
         const url = new URL(event.params.request.url)
         let file
-        if (url.pathname === '/original.png') file = path.join(root, 'src', 'assets', 'steering-wheel-neutral.png')
+        if (url.pathname === '/original.png') file = path.join(root, 'src', 'assets', 'steering-wheel-transparent-candidate.png')
         else {
           file = path.resolve(base, url.pathname === '/' ? 'index.html' : decodeURIComponent(url.pathname).slice(1))
           if (!file.startsWith(base + path.sep)) throw new Error('Outside audit build')

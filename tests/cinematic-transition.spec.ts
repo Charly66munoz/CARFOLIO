@@ -91,7 +91,7 @@ for (const reason of ['resize', 'reduced-motion', 'hiding']) {
       delete (document as unknown as { hidden?: boolean }).hidden
       document.dispatchEvent(new Event('visibilitychange'))
     })
-    await expect(page.getByRole('heading', { name: 'ABOUT', exact: true })).toBeFocused()
+    await expect(page.getByRole('heading', { name: 'More than code.', exact: true })).toBeFocused()
     const a = (await page.locator('.cinematic-wheel').boundingBox())!, b = (await page.locator('.floating-wheel-control').boundingBox())!
     expect(Math.abs(a.x - b.x) + Math.abs(a.y - b.y) + Math.abs(a.width - b.width)).toBeLessThan(0.25)
     // Exercise interruption in the opposite direction as well.
@@ -113,6 +113,99 @@ for (const reason of ['resize', 'reduced-motion', 'hiding']) {
     await expect(page.locator('.cinematic-wheel')).toHaveCSS('visibility', 'hidden')
   })
 }
+
+for (const [width, columns] of [[320, 1], [390, 1], [820, 2], [1024, 4], [1440, 4]] as const) {
+  test(`ABOUT layout: ${columns} columns and wheel clearance at ${width}px`, async ({ page }, info) => {
+    await page.setViewportSize({ width, height: 800 })
+    await page.emulateMedia({ reducedMotion: 'reduce' })
+    await page.goto('/')
+    await expect(page.locator('.internal-section-layout')).toHaveCount(0)
+    await page.getByRole('slider').press('Home')
+    await page.getByRole('slider').press('Enter')
+    await expect(page.locator('.cinematic-scenes')).toHaveAttribute('data-phase', 'section')
+    await expect(page.getByRole('heading', { name: 'More than code.', exact: true })).toBeFocused()
+    await expect(page.getByRole('main')).toHaveCount(1)
+    await expect(page.locator('.section-background')).toHaveAttribute('aria-hidden', 'true')
+    await expect(page.getByRole('heading', { name: 'My Story', exact: true })).toBeVisible()
+    await expect(page.getByText('A journey of growth and discovery.', { exact: true })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Experience', exact: true })).toHaveCount(0)
+    await expect(page.getByRole('heading', { name: 'Education', exact: true })).toHaveCount(0)
+    await expect(page.getByText('Then came one of the most important opportunities of my life: moving to Europe.', { exact: true })).toHaveCount(1)
+
+    const interests = page.locator('.about-interest')
+    await expect(interests).toHaveCount(4)
+    for (const title of ['Cats', 'Sports & Motorsport', 'Music', 'Travel']) {
+      await expect(page.getByRole('heading', { name: title, exact: true })).toHaveCount(1)
+    }
+    const boxes = await interests.evaluateAll(elements => elements.map(element => {
+      const { left, top, right } = element.getBoundingClientRect()
+      return { left, top, right }
+    }))
+    expect(boxes.slice(0, columns).every(box => Math.abs(box.top - boxes[0].top) < 1)).toBe(true)
+    if (columns < 4) expect(boxes[columns].top).toBeGreaterThan(boxes[0].top)
+    const dock = (await page.locator('.floating-wheel-control').boundingBox())!
+    expect(boxes.every(box => box.right <= dock.x - 8)).toBe(true)
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+    await interests.last().scrollIntoViewIfNeeded()
+    await page.screenshot({ path: info.outputPath(`about-interests-${width}.png`) })
+    await page.getByRole('heading', { name: 'More than code.', exact: true }).scrollIntoViewIfNeeded()
+    await page.screenshot({ path: info.outputPath(`about-hero-${width}.png`) })
+  })
+}
+
+for (const reducedMotion of [false, true]) {
+  test(`ABOUT keyboard: scroll restoration and lighting with reduced motion ${reducedMotion}`, async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 600 })
+    await page.emulateMedia({ reducedMotion: reducedMotion ? 'reduce' : 'no-preference' })
+    await page.goto('/')
+    const slider = page.getByRole('slider')
+    await slider.press('Home')
+    await expect(page.locator('.navigator')).toHaveAttribute('data-phase', 'idle')
+    await page.evaluate(() => window.scrollTo({ top: 200, behavior: 'instant' }))
+    const savedScroll = await page.evaluate(() => scrollY)
+    expect(savedScroll).toBeGreaterThan(0)
+    await page.keyboard.press('Enter')
+    await expect(page.locator('.cinematic-scenes')).toHaveAttribute('data-phase', 'section')
+    await expect(page.getByRole('heading', { name: 'More than code.', exact: true })).toBeFocused()
+    expect(await page.evaluate(() => scrollY)).toBe(0)
+
+    const interests = page.locator('.about-interest')
+    for (let index = 0; index < 4; index++) {
+      await page.keyboard.press('Tab')
+      await expect(interests.nth(index)).toBeFocused()
+      await expect(interests.nth(index)).toHaveCSS('outline-style', 'solid')
+      await expect.poll(() => interests.nth(index).evaluate(element => getComputedStyle(element, '::before').opacity)).toBe('1')
+      expect(await interests.nth(index).evaluate(element => getComputedStyle(element, '::before').transitionDuration)).toBe(reducedMotion ? '0s' : '0.3s')
+    }
+    expect(await page.evaluate(() => scrollY)).toBeGreaterThan(0)
+    await page.keyboard.press('Tab')
+    await expect(page.getByRole('button', { name: 'Open portfolio navigation' })).toBeFocused()
+    await page.keyboard.press('Enter')
+    await expect(page.locator('.cinematic-scenes')).toHaveAttribute('data-phase', 'navigation')
+    await expect(slider).toBeFocused()
+    await expect(page.locator('.navigator')).toHaveAttribute('data-angle', '-36')
+    expect(await page.evaluate(() => scrollY)).toBeCloseTo(savedScroll, 0)
+    await expect(page.locator('.internal-section-layout')).toHaveCount(0)
+  })
+}
+
+test('ABOUT lighting: hover fades out and resizing preserves the floating wheel alignment', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('slider').press('Home')
+  await expect(page.locator('.navigator')).toHaveAttribute('data-phase', 'idle')
+  await page.getByRole('slider').press('Enter')
+  await expect(page.locator('.cinematic-scenes')).toHaveAttribute('data-phase', 'section')
+  const interest = page.locator('.about-interest').first()
+  await interest.hover()
+  await expect.poll(() => interest.evaluate(element => getComputedStyle(element, '::before').opacity)).toBe('1')
+  await page.mouse.move(0, 0)
+  await expect.poll(() => interest.evaluate(element => getComputedStyle(element, '::before').opacity)).toBe('0')
+  await page.setViewportSize({ width: 390, height: 700 })
+  const artwork = (await page.locator('.cinematic-wheel').boundingBox())!
+  const dock = (await page.locator('.floating-wheel-control').boundingBox())!
+  expect(Math.abs(artwork.x - dock.x) + Math.abs(artwork.y - dock.y) + Math.abs(artwork.width - dock.width)).toBeLessThan(0.25)
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+})
 
 test('C4 choreography: restrained effects, fixed rotation and timed restoration', async ({ page }, info) => {
   await page.goto('/')

@@ -6,6 +6,8 @@ import { useCinematicTransition } from './features/cinematic-transition/useCinem
 import { CinematicLayer } from './features/cinematic-transition/CinematicLayer'
 import { SectionPlaceholder } from './features/cinematic-transition/SectionPlaceholder'
 import { RaceStartOverlay } from './features/race-start/RaceStartOverlay'
+import { InternalSectionLayout } from './features/internal-sections/InternalSectionLayout'
+import { AboutSection } from './features/about/AboutSection'
 
 export default function App() {
   const [showIntro, setShowIntro] = useState(() => {
@@ -28,6 +30,13 @@ export default function App() {
       navigationRef.current?.querySelector<HTMLButtonElement>('.section-label--active')?.focus({ preventScroll: true })
     }
   }, [showIntro, navigationRef])
+
+  useLayoutEffect(() => {
+    // Wait for travel to finish; the controller retains HOME's scroll for return.
+    if (state.phase === 'section' && state.destination === 'about') {
+      window.scrollTo({ left: 0, top: 0, behavior: 'instant' })
+    }
+  }, [state.phase, state.destination])
 
   const confirm = (section: SectionId) => {
     if (state.phase !== 'navigation') return
@@ -61,7 +70,9 @@ export default function App() {
           <SteeringWheelNavigator wheelStageRef={wheelStageRef} onConfirm={confirm} />
         </div>
         <div className="section-scene" ref={contentRef} inert={state.phase !== 'section'} aria-hidden={state.phase === 'navigation'}>
-          {state.destination && <SectionPlaceholder destination={state.destination} />}
+          {state.destination === 'about'
+            ? <InternalSectionLayout><AboutSection /></InternalSectionLayout>
+            : state.destination && <SectionPlaceholder destination={state.destination} />}
         </div>
       </div>
       <p className="confirmation-status" role="status" aria-live="polite" tabIndex={-1} ref={statusRef}>
