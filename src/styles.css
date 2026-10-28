@@ -83,7 +83,7 @@ p, h1 { margin: 0; }
 .wheel-center:disabled { cursor: default; }
 button:focus-visible { outline: 2px solid var(--color-silver); outline-offset: 4px; }
 .section-label { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 44px; border: 0; padding: 0; background: transparent; cursor: pointer; }
-.navigator-controls { position: absolute; top: 565px; left: 50%; transform: translateX(-50%); display: flex; gap: 16px; align-items: center; }
+.navigator-controls { position: absolute; top: 585px; left: 50%; transform: translateX(-50%); display: flex; gap: 16px; align-items: center; }
 .navigator-controls button { min-width: 44px; min-height: 44px; border: 0; background: transparent; color: var(--color-ice); font: inherit; font-size: 10px; letter-spacing: 1.4px; cursor: pointer; white-space: nowrap; }
 .navigator-controls button:disabled, .navigator-controls button[aria-disabled='true'] { opacity: 0.35; cursor: default; }
 .confirmation-status { position: relative; text-align: center; color: var(--color-silver); font-size: 10px; line-height: 20px; margin: 12px 0 16px; letter-spacing: 1px; }
@@ -166,7 +166,7 @@ button:focus-visible { outline: 2px solid var(--color-silver); outline-offset: 4
 @media (max-width: 760px) {
   .destination-placeholder { min-height: 65svh; padding-top: 90px; padding-right: 12px; }
   .destination-placeholder h2 { letter-spacing: 0.04em; }
-  .floating-wheel-control { top: auto; bottom: max(36px, calc(20px + env(safe-area-inset-bottom))); right: max(16px, env(safe-area-inset-right)); width: 56px; height: 56px; top: calc(70% - 36px)}
+  .floating-wheel-control {  bottom: max(36px, calc(20px + env(safe-area-inset-bottom))); right: max(16px, env(safe-area-inset-right)); width: 56px; height: 56px; top: calc(70% - 36px)}
 }
 @media (prefers-reduced-motion: reduce) {
   .speed-streaks { display: none; }
@@ -296,7 +296,42 @@ button:focus-visible { outline: 2px solid var(--color-silver); outline-offset: 4
 }
 
 .about-section h2, .about-section h3, .about-section h4 { margin: 0; }
-.about-hero { padding-block: 16px clamp(56px, 7vw, 96px); }
+.about-hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: clamp(32px, 5vw, 80px);
+  padding-block: 16px clamp(56px, 7vw, 96px);
+}
+.about-intro { grid-column: 1; grid-row: 1; min-width: 0; }
+.about-portrait {
+  position: relative;
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: end;
+  width: min(100%, 400px);
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: linear-gradient(145deg, #22252a66, var(--color-carbon));
+}
+.about-portrait img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 35%;
+}
+/* Blend only the photograph's edges; the existing aerodynamic lines stay intact. */
+.about-portrait::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, var(--color-carbon), transparent 18%),
+    linear-gradient(0deg, var(--color-carbon), transparent 38%);
+}
 .about-eyebrow { color: var(--color-silver); font-size: 10px; line-height: 1.6; letter-spacing: 2px; }
 .about-hero h2 {
   max-width: 12ch;
@@ -310,14 +345,14 @@ button:focus-visible { outline: 2px solid var(--color-silver); outline-offset: 4
 .about-hero h2:focus { outline: none; }
 .about-subtitle { margin-top: 24px; color: var(--color-silver); font-size: clamp(15px, 1.6vw, 20px); line-height: 1.6; }
 .about-accent { display: block; width: 36px; height: 2px; margin-top: 32px; background: var(--color-sport); }
-.about-story {
-  padding: clamp(24px, 4vw, 56px);
-  border-radius: 8px;
-  background: #17191d;
-  box-shadow: 0 24px 64px #0004, inset 0 1px 0 #f1f0ec08;
+
+.about-sec{
+  direction: flex;
+  flex-direction: column;
 }
+
 .about-section h3 { font-size: clamp(24px, 2.8vw, 36px); font-weight: 500; line-height: 1.25; letter-spacing: -0.035em; }
-.about-story-copy { max-width: 65ch; margin-top: 28px; color: var(--color-ice); font-size: 16px; line-height: 1.85; }
+.about-story-copy { max-width: 65ch; margin-top: 28px; color: var(--color-ice); font-size: 16px; line-height: 1.85;   }
 .about-story-copy p + p { margin-top: 20px; }
 .about-interests { margin-top: clamp(64px, 7vw, 100px); }
 .about-interest-list { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; padding: 0; margin: 32px 0 0; list-style: none; }
@@ -387,6 +422,7 @@ button:focus-visible { outline: 2px solid var(--color-silver); outline-offset: 4
 .about-interest h4 { margin-top: 28px; font-size: 17px; font-weight: 500; line-height: 1.4; }
 .about-interest p { margin-top: 12px; color: var(--color-silver); font-size: 14px; line-height: 1.75; }
 
+
 @media (min-width: 761px) and (max-width: 1023px) {
   .about-interest-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
@@ -395,6 +431,15 @@ button:focus-visible { outline: 2px solid var(--color-silver); outline-offset: 4
     padding: 56px 60px max(136px, calc(env(safe-area-inset-bottom, 0px) + 120px)) 0;
   }
   .section-background-contours { top: -16px; right: -440px; opacity: 0.18; }
+
+  .about-hero {grid-template-columns: minmax(0, 1fr); gap: 0; position: relative;}
+  .about-portrait {grid-column: 1; grid-row: 1;justify-self: end; align-self: start;width: 75%;z-index: 1;}
+
+  .about-intro {grid-column: 1; grid-row: 1; align-self: end; position: relative;z-index: 2;
+  }
+
+
+
   .about-hero h2 { margin-top: 24px; font-size: clamp(36px, 8vw, 56px); }
   .about-eyebrow { font-size: 9px; letter-spacing: 1.3px; }
   .about-story { padding: clamp(14px, 3vw, 24px); border-radius: 6px; }
