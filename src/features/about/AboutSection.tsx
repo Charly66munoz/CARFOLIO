@@ -97,7 +97,7 @@ export function AboutSection() {
       >
         <h3 id="about-interests-heading">Beyond the code.</h3>
         <ol className="about-interest-list">
-          {INTERESTS.map((interest, index) => (
+          {INTERESTS.map((interest,) => (
             <li className="about-interest" key={interest.title} tabIndex={0}>
               <img
                 className="about-interest-image"
