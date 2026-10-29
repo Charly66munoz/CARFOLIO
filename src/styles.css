@@ -354,6 +354,37 @@ button:focus-visible { outline: 2px solid var(--color-silver); outline-offset: 4
 .about-section h3 { font-size: clamp(24px, 2.8vw, 36px); font-weight: 500; line-height: 1.25; letter-spacing: -0.035em; }
 .about-story-copy { max-width: 65ch; margin-top: 28px; color: var(--color-ice); font-size: 16px; line-height: 1.85;   }
 .about-story-copy p + p { margin-top: 20px; }
+.about-education-section { margin-top: clamp(64px, 7vw, 100px); }
+.about-education-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; padding: 0; margin: 32px 0 0; list-style: none; }
+.about-education-entry {
+  display: grid;
+  grid-template-rows: auto 1fr 44px;
+  align-items: start;
+  gap: 24px;
+  min-width: 0;
+  padding-block: 28px;
+  border-block: 1px solid color-mix(in srgb, var(--color-silver) 18%, transparent);
+}
+.about-education-category { color: var(--color-silver); font-size: 12px; line-height: 1.6; letter-spacing: 0.4px; }
+.about-education-number { color: var(--color-sport); font-variant-numeric: tabular-nums; }
+.about-education-details { min-width: 0; overflow-wrap: anywhere; }
+.about-education-title { color: var(--color-ice); font-size: 17px; font-weight: 500; line-height: 1.5; }
+.about-education-institution { margin-top: 8px; color: var(--color-silver); font-size: 14px; line-height: 1.75; }
+.about-education-date { display: flex; align-items: center; align-self: end; height: 44px; color: var(--color-silver); font-size: 14px; line-height: 24px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.about-education-date-infinite {
+  font-family: Arial, sans-serif;
+  font-size: clamp(32px, 3vw, 44px);
+  font-weight: 400;
+  line-height: 1;
+  color: var(--color-sport);
+  rotate : (180deg);
+}
+@media (max-width: 1023px) {
+  .about-education-list { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .about-education-entry { gap: 16px; padding-block: 24px; }
+  .about-education-entry + .about-education-entry { border-top: 0; }
+  .about-education-title { font-size: 16px; }
+}
 .about-interests { margin-top: clamp(64px, 7vw, 100px); }
 .about-interest-list { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; padding: 0; margin: 32px 0 0; list-style: none; }
 

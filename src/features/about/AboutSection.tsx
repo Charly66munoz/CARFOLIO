@@ -15,21 +15,21 @@ const INTERESTS = [
   {
     title: "Music",
     description:
-      "I love international rock! I have MTV and some video games from my childhood to thank for that.",
+      "Thanks to MTV and the video games I played as a kid, I fell in love with rock and indie music!",
     image: guitarPhoto,
     imagePosition: "40% 45%",
   },
   {
     title: "Travel",
     description:
-      "I love traveling and learning about new cultures, trying new foods, unwinding, and not having to do laundry",
+      "I love traveling, trying new foods, chill out, and pretending laundry doesn't exist!",
     image: travelPhoto,
     imagePosition: "35% 50%",
   },
   {
     title: "Cats",
     description:
-      "If in an interview some ask me which are my weaknesses are, I'll say cats!'",
+      "If in an interview some ask me which are my weaknesses, I'll say cats!'",
     image: catPhoto,
     imagePosition: "50% 42%",
   },
@@ -92,12 +92,59 @@ export function AboutSection() {
         </div>
       </section>
       <section
+        className="about-education-section"
+        aria-labelledby="about-education-heading"
+      >
+        <h3 id="about-education-heading">Education &amp; Learning.</h3>
+        <ol className="about-education-list">
+          <li className="about-education-entry">
+            <p className="about-education-category">
+              <span className="about-education-number">01</span> — Formal
+              Education
+            </p>
+            <div className="about-education-details">
+              <h4 className="about-education-title">
+                DAW — Web Application Development
+              </h4>
+              <p className="about-education-institution">Universidad Europea</p>
+            </div>
+            <p className="about-education-date">2024 — 2026</p>
+          </li>
+          <li className="about-education-entry">
+            <p className="about-education-category">
+              <span className="about-education-number">02</span> — Specialized
+              Training
+            </p>
+            <div className="about-education-details">
+              <h4 className="about-education-title">
+                AI Implementation Course
+              </h4>
+              <p className="about-education-institution">BIT AI Academy</p>
+            </div>
+            <p className="about-education-date">2026</p>
+          </li>
+          <li className="about-education-entry">
+            <p className="about-education-category">
+              <span className="about-education-number">03</span> — Continuous
+              Learning
+            </p>
+
+            <div className="about-education-details">
+              <h4 className="about-education-title">Independent learner</h4>
+            </div>
+            <p className="about-education-date about-education-date-infinite">
+              ∞
+            </p>
+          </li>
+        </ol>
+      </section>
+      <section
         className="about-interests"
         aria-labelledby="about-interests-heading"
       >
         <h3 id="about-interests-heading">Beyond the code.</h3>
         <ol className="about-interest-list">
-          {INTERESTS.map((interest,) => (
+          {INTERESTS.map((interest) => (
             <li className="about-interest" key={interest.title} tabIndex={0}>
               <img
                 className="about-interest-image"
@@ -109,7 +156,6 @@ export function AboutSection() {
                 style={{ objectPosition: interest.imagePosition }}
               />
               <div className="about-interest-copy">
-                
                 <h4>{interest.title}</h4>
                 <p>{interest.description}</p>
               </div>
