@@ -8,6 +8,7 @@ import { SectionPlaceholder } from './features/cinematic-transition/SectionPlace
 import { RaceStartOverlay } from './features/race-start/RaceStartOverlay'
 import { InternalSectionLayout } from './features/internal-sections/InternalSectionLayout'
 import { AboutSection } from './features/about/AboutSection'
+import { ExperienceSection } from './features/experience/ExperienceSection'
 
 export default function App() {
   const [showIntro, setShowIntro] = useState(() => {
@@ -35,7 +36,7 @@ export default function App() {
 
   useLayoutEffect(() => {
     // Wait for travel to finish; the controller retains HOME's scroll for return.
-    if (state.phase === 'section' && state.destination === 'about') {
+    if (state.phase === 'section' && (state.destination === 'about' || state.destination === 'experience')) {
       window.scrollTo({ left: 0, top: 0, behavior: 'instant' })
     }
   }, [state.phase, state.destination])
@@ -88,6 +89,10 @@ export default function App() {
               {state.destination === "about" ? (
                 <InternalSectionLayout>
                   <AboutSection />
+                </InternalSectionLayout>
+              ) : state.destination === "experience" ? (
+                <InternalSectionLayout>
+                  <ExperienceSection />
                 </InternalSectionLayout>
               ) : (
                 state.destination && (

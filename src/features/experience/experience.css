@@ -1,0 +1,204 @@
+.experience-section {
+  --experience-rule: color-mix(in srgb, var(--color-silver) 18%, transparent);
+  min-width: 0;
+}
+
+.experience-section h2, .experience-section h3 { margin: 0; }
+.experience-hero { padding-top: 16px; }
+.experience-eyebrow { color: var(--color-silver); font-size: 10px; line-height: 1.6; letter-spacing: 2px; }
+.experience-hero h2 {
+  max-width: 20ch;
+  margin-top: 32px;
+  font-size: clamp(40px, 7vw, 100px);
+  font-weight: 500;
+  letter-spacing: -0.055em;
+  line-height: 1.05;
+  text-wrap: balance;
+}
+.experience-hero h2:focus { outline: none; }
+.experience-subtitle { margin-top: 24px; color: var(--color-silver); font-size: clamp(15px, 1.6vw, 20px); line-height: 1.6; }
+.experience-accent { display: block; width: 36px; height: 2px; margin-top: 32px; background: var(--color-sport); }
+
+.experience-employment {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-top: clamp(40px, 4.5vw, 64px);
+  padding-block: 28px;
+  border-bottom: 1px solid var(--experience-rule);
+}
+.experience-employment h3 { font-size: clamp(36px, 4.5vw, 64px); font-weight: 500; letter-spacing: -0.035em; line-height: 1.1; }
+.experience-role { margin-top: 12px; font-size: clamp(22px, 2.3vw, 32px); line-height: 1.3; letter-spacing: -0.025em; }
+.experience-period { color: var(--color-silver); font-size: 11px; line-height: 1.8; letter-spacing: 1.3px; }
+.experience-period time { white-space: nowrap; }
+
+.experience-performance { margin-top: clamp(40px, 4.5vw, 64px); }
+.experience-record-heading { color: var(--color-silver); font-size: 11px; font-weight: 500; line-height: 1.6; letter-spacing: 1.6px; text-transform: uppercase; }
+.experience-metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; margin: 24px 0 0; }
+.experience-metric { display: grid; grid-template-rows: auto auto auto; align-content: start; min-width: 0; }
+.experience-metric-label { grid-row: 2; margin-top: 16px; color: var(--color-ice); font-size: 11px; line-height: 1.6; letter-spacing: 1.5px; }
+.experience-metric-value { color: var(--color-sport); grid-row: 1; margin: 0; font-size: clamp(38px, 3.6vw, 60px); font-weight: 500; line-height: 1; letter-spacing: -0.025em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.experience-metric-description { margin: 8px 0 0; color: var(--color-silver); font-size: 14px; line-height: 1.6; }
+.experience-estimates { margin-top: 24px; color: var(--color-silver); font-size: 12px; line-height: 1.8; }
+
+.experience-responsibilities { margin-top: clamp(40px, 4.5vw, 64px); border-bottom: 1px solid var(--experience-rule); }
+.experience-responsibility { display: grid; grid-template-columns: minmax(0, 0.2fr) minmax(0, 1.65fr); gap: 32px; padding-block: 18px; border-top: 1px solid var(--experience-rule); }
+.experience-responsibility h3 { font-size: clamp(20px, 2vw, 26px); font-weight: 500; line-height: 1.4; letter-spacing: -0.035em; }
+.experience-responsibility-number { color: var(--color-sport); font-size: 11px; letter-spacing: 1px; white-space: nowrap; }
+.experience-responsibility p { max-width: 65ch; font-size: 16px; line-height: 1.85; }
+
+
+
+.experience-closing {
+  width: 100%;
+  margin-top: clamp(72px, 10vw, 128px);
+  padding: 0 0 0px;
+  font-family: var(--font-sans);
+  background: transparent;
+}
+
+/* Small red accent */
+
+.experience-closing__accent {
+  width: 36px;
+  height: 2px;
+  margin-bottom: 28px;
+  background: var(--color-sport);
+}
+
+/* Eyebrow */
+
+.experience-closing__eyebrow {
+  margin: 0 0 24px;
+
+  color: var(--color-sport);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  line-height: 1.5;
+}
+
+/* Main heading */
+
+.experience-closing__title {
+  max-width: 850px;
+  margin: 0;
+
+  color: var(--color-ice);
+  font-size: clamp(40px, 5.5vw, 76px);
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: -0.055em;
+  text-wrap: balance;
+}
+
+/* Supporting text */
+
+.experience-closing__description {
+  max-width: 560px;
+  margin: 24px 0 0;
+
+  color: var(--color-silver);
+  font-size: clamp(15px, 1.4vw, 17px);
+  font-weight: 400;
+  line-height: 1.8;
+}
+
+/* Contact link */
+
+.experience-closing__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+
+  margin-top: 36px;
+  padding-bottom: 8px;
+
+  border-bottom: 1px solid var(--color-sport);
+
+  color: var(--color-sport);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+
+  transition:
+    color 200ms ease,
+    border-color 200ms ease;
+}
+
+.experience-closing__link span {
+  font-size: 18px;
+  line-height: 1;
+  transition: transform 200ms ease;
+}
+
+.experience-closing__link:hover {
+  color: var(--color-ice);
+  border-color: var(--color-ice);
+}
+
+.experience-closing__link:hover span {
+  transform: translate(3px, -3px);
+}
+
+.experience-closing__link:focus-visible {
+  outline: 2px solid var(--color-sport);
+  outline-offset: 6px;
+}
+
+/* Mobile */
+
+@media (max-width: 760px) {
+  .experience-closing {
+    margin-top: 64px;
+    padding-top: 40px;
+  }
+
+  .experience-closing__eyebrow {
+    font-size: 11px;
+    margin-bottom: 20px;
+  }
+
+  .experience-closing__title {
+    font-size: clamp(36px, 9vw, 54px);
+  }
+
+  .experience-closing__description {
+    margin-top: 20px;
+    font-size: 15px;
+  }
+
+  .experience-closing__link {
+    margin-top: 28px;
+  }
+}
+
+/* Accessibility */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .experience-closing__link,
+  .experience-closing__link span {
+    transition: none;
+  }
+}
+
+@media (max-width: 1023px) {
+  .experience-responsibility { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+}
+
+@media (max-width: 760px) {
+  .experience-eyebrow { font-size: 9px; letter-spacing: 1.3px; }
+  .experience-hero h2 { margin-top: 24px; font-size: clamp(36px, 8vw, 56px); }
+  .experience-employment { flex-direction: column; align-items: flex-start; gap: 20px; }
+  .experience-metrics { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .experience-metric { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); grid-template-rows: auto auto; column-gap: 16px; padding-block: 20px; }
+  .experience-metric + .experience-metric { border-top: 1px solid var(--experience-rule); }
+  .experience-metric-value { grid-column: 1; grid-row: 1 / 3; font-size: clamp(40px, 8vw, 56px); }
+  .experience-metric-label { grid-column: 2; grid-row: 1; margin-top: 0; font-size: 10px; letter-spacing: 1px; }
+  .experience-metric-description { grid-column: 2; grid-row: 2; font-size: 13px; }
+  .experience-estimates { margin-top: 12px; }
+  .experience-responsibility p { font-size: 15px; line-height: 1.8; }
+}
